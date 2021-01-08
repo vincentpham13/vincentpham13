@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>k8s on Clarity</title>
-    <link>/tags/k8s/</link>
+    <link>https://vincentpham13.github.io/vincentpham13/tags/k8s/</link>
     <description>Recent content in k8s on Clarity</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to set up Postgres server for stating environment on Kubernetes</title>
-      <link>/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
       <pubDate>Sat, 04 Apr 2020 00:22:02 +0700</pubDate>
       
-      <guid>/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
       <description>
         
           &lt;!-- ![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png) --&gt;
