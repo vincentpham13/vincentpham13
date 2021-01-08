@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/vincentpham13/pt/categories/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/categories/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/categories/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/css/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/tags/css/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/tags/css/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/destacado/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/post/markdown-syntax/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/post/markdown-syntax/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/post/markdown-syntax/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/series/guia-de-temas/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/html/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/tags/html/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/tags/html/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/markdown/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/tags/markdown/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/tags/markdown/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/post/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/post/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/post/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/series/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/series/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/series/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/categories/sintaxe/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/tags/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/tags/temas/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/categories/temas/</loc>
+    <lastmod>2019-03-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/about/</loc>
+    <lastmod>2019-02-28T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/about/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/about/"
+                />
+  </url>
+  
+  <url>
+    <loc>/vincentpham13/pt/index.html</loc>
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="/vincentpham13/index.html"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="pt"
+                href="/vincentpham13/pt/index.html"
+                />
+  </url>
+  
+</urlset>

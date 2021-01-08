@@ -1,9 +1,10 @@
-baseURL = "http://example.org/"
+author = "Vincent Pham"
+baseURL = "/vincentpham13"
+copyright = "Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved."
 languageCode = "en-us"
+publishDir = "docs"
 theme = "hugo-clarity"
 title = "Vincent Pham"
-author = "Vincent Pham"
-copyright = "Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved."
 # canonifyurls = true
 paginate = 10
 
@@ -18,36 +19,35 @@ DefaultContentLanguage = "en"
 
 [taxonomies]
 category = "categories"
-tag = "tags"
 series = "series"
-
+tag = "tags"
 
 customCSS = ["css/custom.css"]
 
 [markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      hardWraps = false
-      unsafe = true # change to false to disable inclusion of rawHTML and math functions
-      xhtml = false
-    [markup.goldmark.extensions]
-      typographer = false
-  [markup.highlight]
-    codeFences = true
-    guessSyntax = true
-    hl_Lines = "--"
-    lineNoStart = 1
-    lineNos = true # always set to true # else line numbers won't show at all! even when you toggle them on in the UI
-    lineNumbersInTable = false # toggling this on (i.e to true) or deleting this line will break the code blocks functionality. Will
-    noClasses = false
-    # style = "monokai"
-    tabWidth = 2
+[markup.goldmark]
+[markup.goldmark.renderer]
+hardWraps = false 
+unsafe = true # change to false to disable inclusion of rawHTML and math functions
+xhtml = false 
+[markup.goldmark.extensions]
+typographer = false
+[markup.highlight]
+codeFences = true 
+guessSyntax = true 
+hl_Lines = "--" 
+lineNoStart = 1 
+lineNos = true # always set to true # else line numbers won't show at all! even when you toggle them on in the UI
+lineNumbersInTable = false # toggling this on (i.e to true) or deleting this line will break the code blocks functionality. Will
+noClasses = false 
+# style = "monokai"
+tabWidth = 2
 
 [params]
-author = "Vincent Pham"
-twitter = "@vincentpham13"
+author = "Vincent Pham" 
+introDescription = "Senior developer, perpetual student, teacher, continual incremental improvement." 
 largeTwitterCard = false # set to true if you want to show a large twitter card image. The default is a small twitter card image
-introDescription = "Senior developer, perpetual student, teacher, continual incremental improvement."
+twitter = "@vincentpham13" 
 # description = "" # set your site's description here. will be use for home page content meta tags (seo). Alternatively set this description in your homepage content file i.e content/_index.md. Whatever is set in the latter will take precedence
 
 # Google analytics Id
