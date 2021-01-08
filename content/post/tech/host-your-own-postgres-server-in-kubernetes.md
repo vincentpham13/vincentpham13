@@ -4,13 +4,13 @@ date: "2020-04-04T00:22:02+07:00"
 author: "Nhat Pham"
 description : ""
 draft: false
-categories : ["tech"]
+categories : ["technology"]
 type : "post"
-featured : "undraw_server_status.png"
-featuredalt : "post 1"
-featuredpath : "date"
+tags: ["postgres", "kubernetes", "k8s"]
+featureImage : "https://www.marcus-povey.co.uk/wp-content/postgresql_logo-555px.png"
+thumbnail: "https://www.marcus-povey.co.uk/wp-content/postgresql_logo-555px.png"
 ---
-![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png)
+<!-- ![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png) -->
 
 In software development, the staging environment (stage) is a near replica of a production environment for software testing. It requires a copy of the same configurations of hardware, servers, caching and database.
 The fact that if your project budget is quite good enough, you can choose a cloud service to host your databases such as Amazon Web Service(AWS), Microsoft Azure or Google Cloud.

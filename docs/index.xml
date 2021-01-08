@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Clarity</title>
-    <link>https://vincentpham13.github.io/vincentpham13/</link>
+    <link>/</link>
     <description>Recent content on Clarity</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to set up Postgres server for stating environment on Kubernetes</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
+      <link>/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
       <pubDate>Sat, 04 Apr 2020 00:22:02 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
+      <guid>/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
       <description>
         
-          &lt;p&gt;&lt;img src=&#34;https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+          &lt;!-- ![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png) --&gt;
 &lt;p&gt;In software development, the staging environment (stage) is a near replica of a production environment for software testing. It requires a copy of the same configurations of hardware, servers, caching and database.
 The fact that if your project budget is quite good enough, you can choose a cloud service to host your databases such as Amazon Web Service(AWS), Microsoft Azure or Google Cloud.&lt;/p&gt;
 &lt;p&gt;What if your app has been not released and it&#39;s been in the development process or even your client doesn&#39;t want to spend too much cost in this stage?&lt;/p&gt;
@@ -168,10 +168,10 @@ Thank for watching to the end. Here is the &lt;a href=&#34;https://github.com/vi
     
     <item>
       <title>What Is Service Worker in Javascript?</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/</link>
+      <link>/post/tech/what-is-service-worker-in-javascript/</link>
       <pubDate>Sat, 03 Aug 2019 11:16:55 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/</guid>
+      <guid>/post/tech/what-is-service-worker-in-javascript/</guid>
       <description>
         
           
@@ -280,10 +280,10 @@ graph LR;
     
     <item>
       <title>Implement Push Notification Delivery Using Onesignal</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/</link>
+      <link>/post/tech/implement-push-notification-delivery-using-onesignal/</link>
       <pubDate>Mon, 22 Jul 2019 22:56:36 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/</guid>
+      <guid>/post/tech/implement-push-notification-delivery-using-onesignal/</guid>
       <description>
         
           &lt;p&gt;Push Notification is one of most important part of a modern website or mobile application nowaday.
@@ -497,11 +497,11 @@ On the section 4: we define a default welcome notification which will show to th
     </item>
     
     <item>
-      <title>Working With Pdf on Server Side Using Golang and Chromedp</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</link>
+      <title>Working With PDF on Server Side Using Golang and Chromedp</title>
+      <link>/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</link>
       <pubDate>Sat, 20 Jul 2019 00:24:45 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</guid>
+      <guid>/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</guid>
       <description>
         
           &lt;!-- ### Five steps to design and write an effective backend system for PDF processing. --&gt;
@@ -685,10 +685,10 @@ Now we move to the most important part.&lt;/p&gt;
     
     <item>
       <title>Markdown Syntax Guide</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/</link>
+      <link>/post/markdown-syntax/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/</guid>
+      <guid>/post/markdown-syntax/</guid>
       <description>
         
           &lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;
@@ -837,10 +837,10 @@ Now we move to the most important part.&lt;/p&gt;
     
     <item>
       <title>Rich Content</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/rich-content/</link>
+      <link>/post/rich-content/</link>
       <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/rich-content/</guid>
+      <guid>/post/rich-content/</guid>
       <description>
         
           &lt;p&gt;Hugo ships with several &lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#use-hugo-s-built-in-shortcodes&#34;&gt;Built-in Shortcodes&lt;/a&gt; for rich content, along with a &lt;a href=&#34;https://gohugo.io/about/hugo-and-gdpr/&#34;&gt;Privacy Config&lt;/a&gt; and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds.&lt;/p&gt;
@@ -866,7 +866,7 @@ Now we move to the most important part.&lt;/p&gt;
   
   
   &lt;div class=&#34;fancybox&#34;&gt;
-    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34; data-caption=&#34;Advanced options&#34;&gt;&lt;img src=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34;&gt;&lt;/a&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;/logos/logo.png&#34; data-caption=&#34;Advanced options&#34;&gt;&lt;img src=&#34;/logos/logo.png&#34;&gt;&lt;/a&gt;
     &lt;div class=&#34;caption&#34;&gt;Advanced options&lt;/div&gt;
   &lt;/div&gt;
 
@@ -954,10 +954,10 @@ Now we move to the most important part.&lt;/p&gt;
     
     <item>
       <title>Placeholder Text</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/placeholder-text/</link>
+      <link>/post/placeholder-text/</link>
       <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/placeholder-text/</guid>
+      <guid>/post/placeholder-text/</guid>
       <description>
         
           &lt;p&gt;Lorem est tota propiore conpellat pectoribus de pectora summo.&lt;/p&gt;
@@ -989,10 +989,10 @@ Now we move to the most important part.&lt;/p&gt;
     
     <item>
       <title>Math Typesetting</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/math-typesetting/</link>
+      <link>/post/math-typesetting/</link>
       <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/math-typesetting/</guid>
+      <guid>/post/math-typesetting/</guid>
       <description>
         
           &lt;p&gt;Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.&lt;/p&gt;
@@ -1023,10 +1023,10 @@ $$&lt;/p&gt;
     
     <item>
       <title>Emoji Support</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/emoji-support/</link>
+      <link>/post/emoji-support/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/emoji-support/</guid>
+      <guid>/post/emoji-support/</guid>
       <description>
         
           &lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;

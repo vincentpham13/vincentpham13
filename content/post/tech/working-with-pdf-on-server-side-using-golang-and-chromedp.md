@@ -1,14 +1,14 @@
 ---
-title: "Working With Pdf on Server Side Using Golang and Chromedp"
+title: "Working With PDF on Server Side Using Golang and Chromedp"
 date: "2019-07-20T00:24:45+07:00"
 author: "Nhat Pham"
 description : ""
 draft: false
-categories : ["tech"]
+categories : ["Technology"]
 type : "post"
-featured : "post1.png"
 featuredalt : "post 1"
 featuredpath : "date"
+tags: ["PDF"]
 ---
 
 <!-- ### Five steps to design and write an effective backend system for PDF processing. -->

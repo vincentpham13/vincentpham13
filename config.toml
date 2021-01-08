@@ -1,6 +1,6 @@
 author = "Vincent Pham"
-# baseURL = "/"
-baseURL = "https://vincentpham13.github.io/vincentpham13/"
+baseURL = "/"
+# baseURL = "https://vincentpham13.github.io/vincentpham13/"
 copyright = "Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved."
 languageCode = "en-us"
 publishDir = "docs"
@@ -46,7 +46,7 @@ tabWidth = 2
 
 [params]
 author = "Vincent Pham" 
-introDescription = "Senior developer, perpetual student, teacher, continual incremental improvement." 
+introDescription = "Senior developer, English learner, continual incremental improvement." 
 largeTwitterCard = false # set to true if you want to show a large twitter card image. The default is a small twitter card image
 twitter = "@vincentpham13" 
 # description = "" # set your site's description here. will be use for home page content meta tags (seo). Alternatively set this description in your homepage content file i.e content/_index.md. Whatever is set in the latter will take precedence

@@ -22,29 +22,29 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="@vincentpham13">
 <meta name="twitter:title" content="Implement Push Notification Delivery Using Onesignal" />
-<meta property="og:url" content="https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/" />
+<meta property="og:url" content="/post/tech/implement-push-notification-delivery-using-onesignal/" />
 <meta property="og:title" content="Implement Push Notification Delivery Using Onesignal" />
 <meta property="og:description" content="Implement Push Notification Delivery Using Onesignal" />
-<meta property="og:image" content="https://vincentpham13.github.io/vincentpham13/images/thumbnail.png" />
-<link rel="apple-touch-icon" sizes="180x180" href='https://vincentpham13.github.io/vincentpham13/icons/apple-touch-icon.png'>
-<link rel="icon" type="image/png" sizes="32x32" href='https://vincentpham13.github.io/vincentpham13/icons/favicon-32x32.png'>
-<link rel="manifest" href='https://vincentpham13.github.io/vincentpham13/icons/site.webmanifest'>
-<link rel="mask-icon" href='https://vincentpham13.github.io/vincentpham13/safari-pinned-tab.svg' color="#002538">
+<meta property="og:image" content="https://miro.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png" />
+<link rel="apple-touch-icon" sizes="180x180" href='/icons/apple-touch-icon.png'>
+<link rel="icon" type="image/png" sizes="32x32" href='/icons/favicon-32x32.png'>
+<link rel="manifest" href='/icons/site.webmanifest'>
+<link rel="mask-icon" href='/safari-pinned-tab.svg' color="#002538">
 <meta name="msapplication-TileColor" content="#002538">
 <meta name="theme-color" content="#002538">
 
-<link rel="canonical" href="https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/">
+<link rel="canonical" href="/post/tech/implement-push-notification-delivery-using-onesignal/">
 
 
     
 
     
     
-    <link rel="preload" href="https://vincentpham13.github.io/vincentpham13/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity = "sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://vincentpham13.github.io/vincentpham13/js/bundle.min.1808acfb1d04d3a5b99a1cfba38285790c80ab8e606bac49c1d1ad58cb8e99948eb6cde305a109c04a903daed3303533ea66d626e9b26f41d55b4c4620e05dbc.js" as="script" integrity=
-    "sha512-GAis&#43;x0E06W5mhz7o4KFeQyAq45ga6xJwdGtWMuOmZSOts3jBaEJwEqQPa7TMDUz6mbWJumyb0HVW0xGIOBdvA==" crossorigin="anonymous">
+    <link rel="preload" href="/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity = "sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="/js/bundle.min.7f5fc26b26525907f5417c93200c1fa6769cee624d8c40ebe0846542e9092ce3470278d012ceeb7b9176ba8329b1283211cf39b97dfab144e03ed3c7ad967a43.js" as="script" integrity=
+    "sha512-f1/CayZSWQf1QXyTIAwfpnac7mJNjEDr4IRlQukJLONHAnjQEs7re5F2uoMpsSgyEc85uX36sUTgPtPHrZZ6Qw==" crossorigin="anonymous">
     
-    <link rel="stylesheet" type="text/css" href="https://vincentpham13.github.io/vincentpham13/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity="sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity="sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" crossorigin="anonymous">
     
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
@@ -58,8 +58,8 @@
 
 <header class="nav_header" >
   <nav class="nav">
-    <a href='https://vincentpham13.github.io/vincentpham13/' class="nav_brand nav_item">
-      <img src="https://vincentpham13.github.io/vincentpham13/logos/logo.png" class="logo">
+    <a href='/' class="nav_brand nav_item">
+      <img src="/logos/logo.png" class="logo">
       <div class="nav_close">
         <div>
           <svg class="icon">
@@ -78,13 +78,13 @@
         
 
   <div class="nav_parent">
-    <a href="https://vincentpham13.github.io/vincentpham13/" class="nav_item">Home </a>
+    <a href="/" class="nav_item">Home </a>
   </div>
   <div class="nav_parent">
-    <a href="https://vincentpham13.github.io/vincentpham13/post/rich-content/" class="nav_item">Archives </a>
+    <a href="/post/rich-content/" class="nav_item">Archives </a>
   </div>
   <div class="nav_parent">
-    <a href="https://vincentpham13.github.io/vincentpham13/" class="nav_item">Links <img src='https://vincentpham13.github.io/vincentpham13/icons/caret-icon.svg' alt="icon" class="nav_icon"></a>
+    <a href="/" class="nav_item">Links <img src='/icons/caret-icon.svg' alt="icon" class="nav_icon"></a>
     <div class="nav_sub">
       <span class="nav_child"></span>
         <a href="https://www.linkedin.com/" class="nav_child nav_item">LinkedIn</a>
@@ -92,7 +92,7 @@
     </div>
   </div>
   <div class="nav_parent">
-    <a href="https://vincentpham13.github.io/vincentpham13/about/" class="nav_item">About </a>
+    <a href="/about/" class="nav_item">About </a>
   </div>
       
       <div class="nav_parent">
@@ -100,9 +100,9 @@
         <div class="nav_sub">
           <span class="nav_child"></span>
           
-          <a href="https://vincentpham13.github.io/vincentpham13/" class="nav_child nav_item">English</a>
+          <a href="/" class="nav_child nav_item">English</a>
           
-          <a href="https://vincentpham13.github.io/vincentpham13/pt/" class="nav_child nav_item">Português</a>
+          <a href="/pt/" class="nav_child nav_item">Português</a>
           
         </div>
       </div>
@@ -124,7 +124,7 @@
 </svg>
   </a>
     
-  <a href="https://vincentpham13.github.io/vincentpham13/index.xml">
+  <a href="/index.xml">
     <svg class="icon">
   <use xlink:href="#rss"></use>
 </svg>
@@ -155,12 +155,12 @@
     
   <div class="post_share">
     Share on:
-    <a href="https://twitter.com/intent/tweet?text=Implement%20Push%20Notification%20Delivery%20Using%20Onesignal&url=https%3a%2f%2fvincentpham13.github.io%2fvincentpham13%2fpost%2ftech%2fimplement-push-notification-delivery-using-onesignal%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Implement%20Push%20Notification%20Delivery%20Using%20Onesignal&url=%2fpost%2ftech%2fimplement-push-notification-delivery-using-onesignal%2f&tw_p=tweetbutton" class="twitter" title="Share on Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fvincentpham13.github.io%2fvincentpham13%2fpost%2ftech%2fimplement-push-notification-delivery-using-onesignal%2f&t=Implement%20Push%20Notification%20Delivery%20Using%20Onesignal" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=%2fpost%2ftech%2fimplement-push-notification-delivery-using-onesignal%2f&t=Implement%20Push%20Notification%20Delivery%20Using%20Onesignal" class="facebook" title="Share on Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -170,13 +170,15 @@
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/" title="Copy Link" class="link link_yank">
+    <a href="/post/tech/implement-push-notification-delivery-using-onesignal/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
     </a>
   </div>
 
+    
+    <img src="https://miro.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png" class="image_featured">
     
     <p>Push Notification is one of most important part of a modern website or mobile application nowaday.
 It's a communication chanel between users and the apps.
@@ -393,56 +395,56 @@ On the section 4: we define a default welcome notification which will show to th
     
       <h2>Vincent Pham</h2>
       <div>
-        Senior developer, perpetual student, teacher, continual incremental improvement.
+        Senior developer, English learner, continual incremental improvement.
       </div>
-      <a href='https://vincentpham13.github.io/vincentpham13/about/' class="button mt-1" role="button">Read More</a>
+      <a href='/about/' class="button mt-1" role="button">Read More</a>
     <h2 class="mt-4">Featured Posts</h2>
     <ul>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/" class="nav-link">Markdown Syntax Guide</a>
+        <a href="/post/markdown-syntax/" class="nav-link">Markdown Syntax Guide</a>
       </li>
     </ul>
     <h2 class="mt-4">Recent Posts</h2>
     <ul class="flex-column">
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/" class="nav-link">How to set up Postgres server for stating environment on Kubernetes</a>
+        <a href="/post/tech/host-your-own-postgres-server-in-kubernetes/" class="nav-link">How to set up Postgres server for stating environment on Kubernetes</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/" class="nav-link">What Is Service Worker in Javascript?</a>
+        <a href="/post/tech/what-is-service-worker-in-javascript/" class="nav-link">What Is Service Worker in Javascript?</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/" class="nav-link">Working With Pdf on Server Side Using Golang and Chromedp</a>
+        <a href="/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/" class="nav-link">Working With PDF on Server Side Using Golang and Chromedp</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/" class="nav-link">Markdown Syntax Guide</a>
+        <a href="/post/markdown-syntax/" class="nav-link">Markdown Syntax Guide</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/tech/rich-content/" class="nav-link">Rich Content</a>
+        <a href="/post/rich-content/" class="nav-link">Rich Content</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/placeholder-text/" class="nav-link">Placeholder Text</a>
+        <a href="/post/placeholder-text/" class="nav-link">Placeholder Text</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/math-typesetting/" class="nav-link">Math Typesetting</a>
+        <a href="/post/math-typesetting/" class="nav-link">Math Typesetting</a>
       </li>
       <li>
-        <a href="https://vincentpham13.github.io/vincentpham13/post/emoji-support/" class="nav-link">Emoji Support</a>
+        <a href="/post/emoji-support/" class="nav-link">Emoji Support</a>
       </li>
     </ul>
     <div>
       <h2 class="mt-4 taxonomy" id="categories-section">Categories</h2>
       <nav class="tags_nav">
-        <a href='https://vincentpham13.github.io/vincentpham13/categories/tech/' class="post_tag button button_translucent">
-          TECH
+        <a href='/categories/technology/' class="post_tag button button_translucent">
+          TECHNOLOGY
           <span class="button_tally">4</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/categories/syntax/' class="post_tag button button_translucent">
+        <a href='/categories/syntax/' class="post_tag button button_translucent">
           SYNTAX
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/categories/themes/' class="post_tag button button_translucent">
+        <a href='/categories/themes/' class="post_tag button button_translucent">
           THEMES
           <span class="button_tally">1</span>
         </a>
@@ -453,7 +455,7 @@ On the section 4: we define a default welcome notification which will show to th
     <div>
       <h2 class="mt-4 taxonomy" id="series-section">Series</h2>
       <nav class="tags_nav">
-        <a href='https://vincentpham13.github.io/vincentpham13/series/themes-guide/' class="post_tag button button_translucent">
+        <a href='/series/themes-guide/' class="post_tag button button_translucent">
           THEMES-GUIDE
           <span class="button_tally">1</span>
         </a>
@@ -464,47 +466,67 @@ On the section 4: we define a default welcome notification which will show to th
     <div>
       <h2 class="mt-4 taxonomy" id="tags-section">Tags</h2>
       <nav class="tags_nav">
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/markdown/' class="post_tag button button_translucent">
+        <a href='/tags/markdown/' class="post_tag button button_translucent">
           MARKDOWN
           <span class="button_tally">2</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/css/' class="post_tag button button_translucent">
+        <a href='/tags/css/' class="post_tag button button_translucent">
           CSS
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/emoji/' class="post_tag button button_translucent">
+        <a href='/tags/emoji/' class="post_tag button button_translucent">
           EMOJI
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/featured/' class="post_tag button button_translucent">
+        <a href='/tags/featured/' class="post_tag button button_translucent">
           FEATURED
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/html/' class="post_tag button button_translucent">
+        <a href='/tags/html/' class="post_tag button button_translucent">
           HTML
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/privacy/' class="post_tag button button_translucent">
+        <a href='/tags/k8s/' class="post_tag button button_translucent">
+          K8S
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='/tags/kubernetes/' class="post_tag button button_translucent">
+          KUBERNETES
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='/tags/pdf/' class="post_tag button button_translucent">
+          PDF
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='/tags/postgres/' class="post_tag button button_translucent">
+          POSTGRES
+          <span class="button_tally">1</span>
+        </a>
+        
+        <a href='/tags/privacy/' class="post_tag button button_translucent">
           PRIVACY
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/shortcodes/' class="post_tag button button_translucent">
+        <a href='/tags/shortcodes/' class="post_tag button button_translucent">
           SHORTCODES
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/text/' class="post_tag button button_translucent">
+        <a href='/tags/text/' class="post_tag button button_translucent">
           TEXT
           <span class="button_tally">1</span>
         </a>
         
-        <a href='https://vincentpham13.github.io/vincentpham13/tags/themes/' class="post_tag button button_translucent">
+        <a href='/tags/themes/' class="post_tag button button_translucent">
           THEMES
           <span class="button_tally">1</span>
         </a>
@@ -580,7 +602,7 @@ On the section 4: we define a default welcome notification which will show to th
 
 <footer class="footer">
   <div class="footer_inner wrap pale">
-    <img src='https://vincentpham13.github.io/vincentpham13/icons/apple-touch-icon.png' class="icon icon_2 transparent">
+    <img src='/icons/apple-touch-icon.png' class="icon icon_2 transparent">
     <p>Copyright<span class="year"></span> CLARITY. All Rights Reserved</p><a class="to_top" href="#documentTop">
   <svg class="icon">
   <use xlink:href="#arrow"></use>
@@ -588,16 +610,16 @@ On the section 4: we define a default welcome notification which will show to th
 </a>
 
   </div>
-  <script src="/vincentpham13/js/jquery-3.3.1.min.js?1610096950"></script>
+  <script src="/js/jquery-3.3.1.min.js?1610101361"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
-  <script src="/vincentpham13/js/mermaid.js?1610096950"></script>
+  <script src="/js/mermaid.js?1610101361"></script>
 
   <script>
       mermaid.initialize({ startOnLoad: true });
   </script>
 </footer>
 
-    <script type="text/javascript" src="https://vincentpham13.github.io/vincentpham13/js/bundle.min.1808acfb1d04d3a5b99a1cfba38285790c80ab8e606bac49c1d1ad58cb8e99948eb6cde305a109c04a903daed3303533ea66d626e9b26f41d55b4c4620e05dbc.js" integrity="sha512-GAis&#43;x0E06W5mhz7o4KFeQyAq45ga6xJwdGtWMuOmZSOts3jBaEJwEqQPa7TMDUz6mbWJumyb0HVW0xGIOBdvA==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/bundle.min.7f5fc26b26525907f5417c93200c1fa6769cee624d8c40ebe0846542e9092ce3470278d012ceeb7b9176ba8329b1283211cf39b97dfab144e03ed3c7ad967a43.js" integrity="sha512-f1/CayZSWQf1QXyTIAwfpnac7mJNjEDr4IRlQukJLONHAnjQEs7re5F2uoMpsSgyEc85uX36sUTgPtPHrZZ6Qw==" crossorigin="anonymous"></script>
     
   </body>
 </html>

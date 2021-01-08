@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Claridade</title>
-    <link>https://vincentpham13.github.io/vincentpham13/pt/tags/</link>
+    <link>/pt/tags/</link>
     <description>Recent content in Tags on Claridade</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/pt/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="/pt/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

@@ -4,7 +4,7 @@ date: "2019-08-03T11:16:55+07:00"
 author: "Nhat Pham"
 description : "service workker"
 draft: false
-categories : ["tech"]
+categories : ["Technology"]
 type : "post"
 ---
 {{< fancybox path="https://cdn-images-1.medium.com/max/1000" file="1*oOcY2Gn-LVt1h-e9xOv5oA.jpeg" caption="Service worker" gallery="Gallery Name" >}}

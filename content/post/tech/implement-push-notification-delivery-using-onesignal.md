@@ -4,7 +4,9 @@ date: "2019-07-22T22:56:36+07:00"
 author: "Nhat Pham"
 description : "Implement Push Notification Delivery Using Onesignal"
 draft: false
-categories : ["tech"]
+featureImage: "https://miro.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png"
+thumbnail: "https://miro.medium.com/max/300/1*7xHdCFeYfD8zrIivMiQcCQ.png"
+categories : ["Technology"]
 type : "post"
 ---
 
