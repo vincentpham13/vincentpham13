@@ -16,7 +16,7 @@
       <guid>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
       <description>
         
-          &lt;p&gt;&lt;img src=&#34;https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png&#34; alt=&#34;::img-medium&#34;&gt;&lt;/p&gt;
+          &lt;p&gt;&lt;img src=&#34;https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;In software development, the staging environment (stage) is a near replica of a production environment for software testing. It requires a copy of the same configurations of hardware, servers, caching and database.
 The fact that if your project budget is quite good enough, you can choose a cloud service to host your databases such as Amazon Web Service(AWS), Microsoft Azure or Google Cloud.&lt;/p&gt;
 &lt;p&gt;What if your app has been not released and it&#39;s been in the development process or even your client doesn&#39;t want to spend too much cost in this stage?&lt;/p&gt;
@@ -866,8 +866,8 @@ Now we move to the most important part.&lt;/p&gt;
   
   
   &lt;div class=&#34;fancybox&#34;&gt;
-    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34; data-caption=&#34;Caption 3&#34;&gt;&lt;img src=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34;&gt;&lt;/a&gt;
-    &lt;div class=&#34;caption&#34;&gt;Caption 3&lt;/div&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34; data-caption=&#34;Advanced options&#34;&gt;&lt;img src=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Advanced options&lt;/div&gt;
   &lt;/div&gt;
 
 

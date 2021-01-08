@@ -15,7 +15,8 @@ Hugo ships with several [Built-in Shortcodes](https://gohugo.io/content-manageme
 <!--more-->
 ---
 
-{{< fancybox path="https://vincentpham13.github.io/vincentpham13/logos/" file="logo.png" "Caption 3" "Gallery Name" >}}
+{{< fancybox "/logos" "logo.png" "Advanced options" "Gallery Name" >}}
+
 
 ## Instagram Simple Shortcode
 
