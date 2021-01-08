@@ -1,5 +1,5 @@
 author = "Vincent Pham"
-baseURL = "/"
+baseURL = "/vincentpham13"
 copyright = "Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved."
 languageCode = "en-us"
 publishDir = "docs"
