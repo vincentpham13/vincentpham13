@@ -2,20 +2,1044 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vincent Pham</title>
-    <link>https://vincentpham13.github.io/vincentpham13/index.html</link>
+    <link>https://vincentpham13.github.io/vincentpham13/</link>
     <description>Recent content on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright><atom:link href="https://vincentpham13.github.io/vincentpham13/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
+    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Posts</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>How to set up Postgres server for stating environment on Kubernetes</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
+      <pubDate>Sat, 04 Apr 2020 00:22:02 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/</guid>
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
+      <description>
+        
+          &lt;!-- ![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png) --&gt;
+&lt;p&gt;In software development, the staging environment (stage) is a near replica of a production environment for software testing. It requires a copy of the same configurations of hardware, servers, caching and database.
+The fact that if your project budget is quite good enough, you can choose a cloud service to host your databases such as Amazon Web Service(AWS), Microsoft Azure or Google Cloud.&lt;/p&gt;
+&lt;p&gt;What if your app has been not released and it&#39;s been in the development process or even your client doesn&#39;t want to spend too much cost in this stage?&lt;/p&gt;
+&lt;p&gt;This article will walk you through step by step to host your own PostgreSQL database in your virtual machine without spending money to SaaS.&lt;/p&gt;
+
+&lt;div class=&#34;notices info&#34; &gt;&lt;p&gt;This lab uses Kubernetes cluster hosted on &lt;a href=&#34;https://azure.microsoft.com/en-us/&#34;&gt;&lt;strong&gt;Azure cloud&lt;/strong&gt;&lt;/a&gt;, therefore some configurations might be different on your machine.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;prerequisite&#34;&gt;Prerequisite&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Working Kubernetes Cluster&lt;/li&gt;
+&lt;li&gt;Basic understanding of Docker&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can provision the Kubernetes cluster on any public cloud provider like AWS, Azure or Google cloud, etc.
+To create your own PostgreSQL server on Kubernetes, we need the folowwing steps below:&lt;/p&gt;
+&lt;h2 id=&#34;manifest-preparation&#34;&gt;Manifest Preparation&lt;/h2&gt;
+&lt;h3 id=&#34;creating-configmaps-for-postgresql-configuration&#34;&gt;Creating Configmaps for PostgreSQL configuration&lt;/h3&gt;
+&lt;p&gt;We firstly defined Postgres information which you will use it to connect later&lt;/p&gt;
+&lt;p&gt;File: &lt;strong&gt;configmap-postgres.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;ConfigMap&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;POSTGRES_DB&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mydb&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;POSTGRES_USER&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;vincentpham&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;POSTGRES_PASSWORD&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;vincentpham&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run kubectl command to create the Configmaps object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;kubectl apply -f configmap-postgres.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;notices note&#34; &gt;&lt;p&gt;You can change the favorite database nane, user and password, &lt;strong&gt;mydb&lt;/strong&gt; and &lt;strong&gt;vincentpham&lt;/strong&gt; is not a mandatory.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;creating-persistent-volume-and-persistent-volume-claim&#34;&gt;Creating Persistent Volume and Persistent Volume Claim&lt;/h3&gt;
+&lt;p&gt;As you all know, all the data which is generated by the container will be lost after a termination of the container instance. To keep the data, we must use Kubernetes persistent volume and persistent volumne claim resource to store data on persistent storages.&lt;/p&gt;
+&lt;p&gt;File: &lt;strong&gt;persistent-storage-volume.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;PersistentVolume&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-pv-volume&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;local&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storageClassName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;standard&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;capacity&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;5Gi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;accessModes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;ReadWriteMany&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;hostPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/mnt/data&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nn&#34;&gt;---&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;PersistentVolumeClaim&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-pv-claim&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storageClassName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;standard&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;accessModes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;ReadWriteMany&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;resources&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;requests&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;storage&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;5Gi&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run kubectl command to create the PersistentVolume and PersistentVolumeClaim Object:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;kubectl apply -f persistent-storage-volume.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;creating-deployment&#34;&gt;Creating Deployment&lt;/h3&gt;
+&lt;p&gt;PostgreSQL deployment uses PostgresQL image version 10.12. It&#39;s using the environtment variables from the configmap like username, password, database name to to create postgres instance. It also mounts the volume created from the persistent volumes and claims to make PostgreSQL container’s data persists.&lt;/p&gt;
+&lt;p&gt;File: &lt;strong&gt;deployment_postgres.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;apps/v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-deployment&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;replicas&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;matchLabels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;containers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres:10.4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;imagePullPolicy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;IfNotPresent&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;containerPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5432&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;envFrom&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;configMapRef&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;                &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumeMounts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;mountPath&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;/var/lib/postgresql/data&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;              &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgredb&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# - mountPath: /var/lib/postgresql/postgres-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;#   name: postgres-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;# - mountPath: /var/lib/postgresql/pghba-config&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;c&#34;&gt;#   name: pghba-conf&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgredb&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;          &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;persistentVolumeClaim&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;            &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;claimName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-pv-claim&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;creating-service&#34;&gt;Creating Service&lt;/h3&gt;
+&lt;p&gt;File: &lt;strong&gt;service_postgres.yml&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;apiVersion&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;v1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;kind&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;Service&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;metadata&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-staging&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;namespace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;staging&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;labels&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;spec&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;type&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;LoadBalancer&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;selector&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;app&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;- &lt;span class=&#34;nt&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;postgres-node&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5432&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;targetPort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;5432&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nodePort&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;31516&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run &lt;code&gt;kubectl get all&lt;/code&gt; command to see all resources&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;NAME                                       READY   STATUS    RESTARTS   AGE
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;pod/postgres-deployment-597c8bdbd9-w7tld   1/1     Running   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;          3m5s
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;NAME                       TYPE           CLUSTER-IP     EXTERNAL-IP   PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;          AGE
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;service/kubernetes         ClusterIP      10.96.0.1      &amp;lt;none&amp;gt;        443/TCP          3m35s
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;service/postgres-staging   LoadBalancer   10.98.245.22   &amp;lt;pending&amp;gt;     5432:31516/TCP   2m57s
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;deployment.apps/postgres-deployment   1/1     &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;            &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;           3m5s
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;NAME                                             DESIRED   CURRENT   READY   AGE
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;replicaset.apps/postgres-deployment-597c8bdbd9   &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;         &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;       3m5s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Let&#39;s take a look at the external-ip column in the service area, it has a pending ip address which you can access your database from the world along with the port.
+if you&#39;re hosting your Kubernetes cluster on the cloud, you should see the following result:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;NAME                            TYPE           CLUSTER-IP     EXTERNAL-IP     PORT&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;S&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;          AGE
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;service/postgres-staging        LoadBalancer   10.0.250.38    51.124.xxx.xxx   5432:31516/TCP   28d
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;you can add this IP to your DNS table so that you can access the postgres instance via a better url format. Here is the result, huraaaa :))
+&lt;img src=&#34;https://i.imgur.com/pz5IV8Z.png&#34; alt=&#34;some alt text:inline&#34;&gt;
+Thank for watching to the end. Here is the &lt;a href=&#34;https://github.com/vincentpham13/postgres-kubernetes&#34;&gt;completed resources&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>What Is Service Worker in Javascript?</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/</link>
+      <pubDate>Sat, 03 Aug 2019 11:16:55 +0700</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/</guid>
       <description>
         
           
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://cdn-images-1.medium.com/max/1000/1*oOcY2Gn-LVt1h-e9xOv5oA.jpeg&#34; data-caption=&#34;Service worker&#34;&gt;&lt;img src=&#34;https://cdn-images-1.medium.com/max/1000/1*oOcY2Gn-LVt1h-e9xOv5oA.jpeg&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Service worker&lt;/div&gt;
+  &lt;/div&gt;
+
+
+&lt;p&gt;A service worker is simply a script (Javascript file) that run on background of the browser.
+A service worker has the following characters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Does not relevant to a specific web site.&lt;/li&gt;
+&lt;li&gt;Can not interact directly with DOM nor the webpage.&lt;/li&gt;
+&lt;li&gt;Supports only HTTPS.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although it run on a different thread but it can communicate with webpage through postMessage method.&lt;br&gt;
+It also takes advanced of &lt;a href=&#34;https://developers.google.com/web/updates/2015/12/background-sync&#34;&gt;background synchronization&lt;/a&gt;.&lt;br&gt;
+With service worker, your website won&#39;t be interupted when internet connection is not available.&lt;/p&gt;
+&lt;h3 id=&#34;service-worker-vs-web-worker&#34;&gt;Service worker VS Web Worker&lt;/h3&gt;
+&lt;p&gt;Let&#39;s find out some different things between service worker and web worker:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;th&gt;Webpage communication&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Service Worker&lt;/td&gt;
+&lt;td&gt;is designed to handle network request and assist offline first development&lt;/td&gt;
+&lt;td&gt;go through service workers PostMessage emthod&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Web Worker&lt;/td&gt;
+&lt;td&gt;takes advanced of multi-threading model to deal with complex data or processor intensive tasks in the background&lt;/td&gt;
+&lt;td&gt;go through web workers PostMessage method&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;service-worker-lifecycle&#34;&gt;Service Worker Lifecycle&lt;/h3&gt;
+&lt;p&gt;There&#39;re 3 stages in lifecycle of a service worker:&lt;/p&gt;
+
+&lt;div class=&#34;mermaid&#34; align=&#34;left&#34;&gt;
+graph LR;
+	  A((No Service Worker)) --&gt; B(Install Event)
+    B --&gt; C(Activate Event)
+    C --&gt; D(Idle)
+    D --&gt; E[Fetch Event]
+    E --&gt; D
+    D --&gt; F[Stoped]
+    F --&gt; D
+
+&lt;/div&gt;
+
+&lt;h3 id=&#34;register-a-service-worker&#34;&gt;Register A Service Worker&lt;/h3&gt;
+&lt;p&gt;To register a service worker, we first check if the browser supports it then register it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;serviceWorker&amp;#39;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;  &lt;span class=&#34;nx&#34;&gt;navigator&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;serviceWorker&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;register&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;service-worker.js&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;then&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;    &lt;span class=&#34;nx&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Registers service worker successfully&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;    &lt;span class=&#34;nx&#34;&gt;console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Failed to register service worker&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;9&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;register&lt;/code&gt; function require a path to your service worker file&lt;/p&gt;
+
+&lt;div class=&#34;notices info&#34; &gt;&lt;p&gt;An information disclaimer&lt;/p&gt;
+&lt;/div&gt;
+
+
+&lt;a  href=&#34;https://getgrav.org/&#34; target=&#34;_blank&#34;  class=&#34;btn btn-default&#34;&gt;
+  
+  
+  
+    
+  &lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+    
+  
+  Download ServiceWorker file
+  
+&lt;/a&gt;
+
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Implement Push Notification Delivery Using Onesignal</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/</link>
+      <pubDate>Mon, 22 Jul 2019 22:56:36 +0700</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/</guid>
+      <description>
+        
+          &lt;p&gt;Push Notification is one of most important part of a modern website or mobile application nowaday.
+It&#39;s a communication chanel between users and the apps.
+Some of famous push notification services such as &lt;a href=&#34;https://firebase.google.com/&#34;&gt;Firebase Cloud Messaging&lt;/a&gt; of Google, &lt;a href=&#34;https://aws.amazon.com/sns/&#34;&gt;SNS (Simple Notification Service)&lt;/a&gt; of Amazon, &lt;a href=&#34;https://www.airship.com/&#34;&gt;Urban Airship&lt;/a&gt; and so on...&lt;/p&gt;
+&lt;p&gt;There are many famous push notification services out there, But in this article, I&#39;m gonna use &lt;a href=&#34;https://onesignal.com/&#34;&gt;OneSignal&lt;/a&gt;. You will learn how to add push notification feature into your application.&lt;/p&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://whatsnewinpublishing.com/wp-content/uploads/2019/03//Push-Notification-1170x780.jpg&#34; data-caption=&#34;Notifications display on iPhone smartphone&#34;&gt;&lt;img src=&#34;https://whatsnewinpublishing.com/wp-content/uploads/2019/03//Push-Notification-1170x780.jpg&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Notifications display on iPhone smartphone&lt;/div&gt;
+  &lt;/div&gt;
+
+
+&lt;h2 id=&#34;what-is-onesignal&#34;&gt;What is OneSignal?&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OneSignal is a hight volume and reliable push notification service for websites and mobile applications.&lt;br&gt;
+It supports all major native and mobile platform by providing dedicated SDKs for each platform, a RESTful server API and an online dashboard for marketers to design and send push notifications.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;One signal has becomes the most widely used push notification service for both web and mobile developers since it has various reasons such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Easy to use&lt;/strong&gt;: Implementing reliable interfaces to the GCM/FCM (Google), APNS (Apple), and the Web Push protocols is difficult. There are open source projects to do it, but even the best ones break when message quantity begins to exceed 500,000 at a time.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Better Than Competition&lt;/strong&gt;: Other notification service lack feature such as &lt;em&gt;segmentation&lt;/em&gt; , &lt;em&gt;automatic/triggered notifications&lt;/em&gt;, &lt;em&gt;tag-variable substitution&lt;/em&gt;, a notification delivery Server REST API, or &lt;em&gt;detailed reporting tools&lt;/em&gt;. Additionally, other services  often provice low quality or out of date SDKs that do not support new platform features.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Advanced Functionality&lt;/strong&gt;: OneSignal provides marketing tools including &lt;strong&gt;A/B notification testing&lt;/strong&gt;, segment targeting, variable-substitution, localization, drip marketing and conversion tracking.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Platform Support&lt;/strong&gt;: OneSignal provides a single UI and API to deliver message across iOS, Android, Amazon Fire, Windows Phone, Chrome Apps, Amazon Alexa, Safari, Chrome Web and Firefox.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Popular&lt;/strong&gt;: OneSignal has over 500,000 registered developers and 200,000 applications and websites.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;register-onesignal&#34;&gt;Register OneSignal&lt;/h2&gt;
+&lt;p&gt;OneSignal has three pricing plans: Free, Starter and Pro, &lt;a href=&#34;https://onesignal.com/pricing&#34;&gt;click to see detail&lt;/a&gt;.
+The &lt;strong&gt;Free&lt;/strong&gt; plan provides serveral useful features such as Rich notification, personalized notifications, Segmentation, A/B Testing, Templates, API Access, Real-Time Reporting and Deliver by Timezone. It&#39;s quite enough to discover the benifits of OneSignal before going to deep to advanced features.&lt;/p&gt;
+&lt;p&gt;To register an onesignal account, you simply go to &lt;a href=&#34;https://onesignal.com/&#34;&gt;official OneSignal website&lt;/a&gt; and click signup&lt;/p&gt;
+&lt;h2 id=&#34;create-your-first-app&#34;&gt;Create your first app&lt;/h2&gt;
+&lt;p&gt;After creating your account, you&#39;re redirected to app dashboard. At this page, we click &lt;strong&gt;ADD APP&lt;/strong&gt; button and name it, the name is up to you, in my case it&#39;s &lt;strong&gt;MyFirstApp&lt;/strong&gt;&lt;/p&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//DSQhN9V.png&#34; data-caption=&#34;Create your first OneSignal app&#34;&gt;&lt;img src=&#34;https://i.imgur.com//DSQhN9V.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Create your first OneSignal app&lt;/div&gt;
+  &lt;/div&gt;
+
+
+&lt;p&gt;Next step, you will have to select one platform for your created app, but you can return to edit more platforms.
+In my example, for convenient, I chose Web Push then hit &lt;strong&gt;Next&lt;/strong&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//qwxdRsg.png&#34; data-caption=&#34;Select one platform&#34;&gt;&lt;img src=&#34;https://i.imgur.com//qwxdRsg.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Select one platform&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/p&gt;
+&lt;p&gt;This step is about configuring your web push, you may not see this step if you choose another platform.
+Since we selected Web Push as app platform, so we need to setup something to our web site can receive the push notifications.&lt;/p&gt;
+&lt;p&gt;There&#39;re there kind of integration here:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Typical Site&lt;/strong&gt;: Select this if you are unsure.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Workpress Plugin or Website Builder&lt;/strong&gt;: For sites using Workpress, Blogger, Shoptify or other content management system.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Custom Code&lt;/strong&gt;: For advanced users who wish to code their web push configuration using Javascript.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I recommend you choose the typical site integration.&lt;br&gt;
+From section 2, all configuration are optional to you, you can skip them, but it&#39;s very useful for your site.&lt;br&gt;
+On the section 2: you will need to input your site name, site url, turn on HTTPS option if your site supports SSL cert.&lt;br&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//jpGTmt7.png&#34; data-caption=&#34;Site setup&#34;&gt;&lt;img src=&#34;https://i.imgur.com//jpGTmt7.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Site setup&lt;/div&gt;
+  &lt;/div&gt;
+
+
+On the section 3: We need to customize an promt which will ask your users at the first time they visit your site.&lt;br&gt;
+On the section 4: we define a default welcome notification which will show to the users when they allow to subscribe to receive your site news or updates.&lt;br&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//2SxyOHb.png&#34; data-caption=&#34;Permission Prompt Setup and Welcome Notification&#34;&gt;&lt;img src=&#34;https://i.imgur.com//2SxyOHb.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Permission Prompt Setup and Welcome Notification&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/p&gt;
+&lt;p&gt;On the section 5: There&#39;s some advanced config here like Webhooks, Service workers. beside that, we&#39;re also able to config the behavior of the notification such as opening a new window tab when users clicking or keep the notification remain util users click it.&lt;/p&gt;
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//JthHoeC.png&#34; data-caption=&#34;Advanced options&#34;&gt;&lt;img src=&#34;https://i.imgur.com//JthHoeC.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Advanced options&lt;/div&gt;
+  &lt;/div&gt;
+
+
+&lt;h2 id=&#34;configure-web-push&#34;&gt;Configure Web Push&lt;/h2&gt;
+&lt;p&gt;To integrate OneSignal into your site, you need to download the OneSignal SDK files which based on your selected platform before. Additionally, you must also attach its script into your entry html file.
+
+
+
+  
+    
+    
+    
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://i.imgur.com//uVNNJ9V.png&#34; data-caption=&#34;Configure Web Push&#34;&gt;&lt;img src=&#34;https://i.imgur.com//uVNNJ9V.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Configure Web Push&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Working With PDF on Server Side Using Golang and Chromedp</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</link>
+      <pubDate>Sat, 20 Jul 2019 00:24:45 +0700</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</guid>
+      <description>
+        
+          &lt;!-- ### Five steps to design and write an effective backend system for PDF processing. --&gt;
+&lt;p&gt;Nowaday, Most of web or mobile applications use pdf as an exposing document type to their users.
+For example, exporting a report to the client after an successful bank transaction, another use case is a health service application, the doctor can send the prescription under pdf file to the patient.&lt;/p&gt;
+&lt;p&gt;This post is tended to the backend developers who looking for an effective solution for PDF processing in their system.&lt;br&gt;
+I prefer &lt;a href=&#34;https://golang.org/&#34;&gt;Go lang&lt;/a&gt; since it is an expressive, concise, clean, and efficient programming language.&lt;/p&gt;
+&lt;p&gt;In this article, we&#39;ll go over files steps:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. Idealing and Preparation&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;2. What Chromedb is&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;3. Construct data modeling&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;4. Initialize a simple project&lt;/strong&gt;&lt;br&gt;
+&lt;strong&gt;3. To be decided..&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;idealizing-and-preparation&#34;&gt;Idealizing and Preparation.&lt;/h3&gt;
+&lt;p&gt;I&#39;ve recently been working an health service application for French. Obviously, I won&#39;t introduce entire features of that system here since they&#39;re not in the main point of this article, but there&#39;s one thing i wanna share with you guys is its pdf generator in backend, it&#39;s one of important parts of prescription creation.&lt;/p&gt;
+&lt;p&gt;In this post, we&#39;ll implement a prescription exporting process, it serves for the doctor who will prescribe and send prescriptions to the patients.&lt;/p&gt;
+&lt;h3 id=&#34;what-chromedb-is&#34;&gt;What Chromedb is.&lt;/h3&gt;
+&lt;p&gt;Chromedp is a high level Chrome DevTools Protocol client that simplifies driving browsers for scraping, unit testing, or profiling web pages using the CDP, see more&lt;/p&gt;
+&lt;h3 id=&#34;construct-data-modeling&#34;&gt;Construct data modeling.&lt;/h3&gt;
+&lt;p&gt;Assuming we&#39;re having a lot of stuff that should be applied in precription file, it might include such as following information: doctor name, doctor email, hospital name, drug info, patient name, patient address,...&lt;/p&gt;
+&lt;p&gt;These information should be placed in the right position in the pdf file, just like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://www.rbcinsurance.com/group-benefits/_assets-custom/images/prescription-drug-sample-receipt-en.jpg&#34; alt=&#34;prescription-demo&#34;&gt;&lt;/p&gt;
+&lt;p&gt;So arcording to the demo prescription, our prescription template should contain:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hospital
+&lt;ul&gt;
+&lt;li&gt;Hospital Name&lt;/li&gt;
+&lt;li&gt;Hospital Address&lt;/li&gt;
+&lt;li&gt;Hospital Phone Number&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Prescription
+&lt;ul&gt;
+&lt;li&gt;Prescription Date&lt;/li&gt;
+&lt;li&gt;Prescription Order&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Patient
+&lt;ul&gt;
+&lt;li&gt;Patient Name&lt;/li&gt;
+&lt;li&gt;Patient Address&lt;/li&gt;
+&lt;li&gt;Patient City&lt;/li&gt;
+&lt;li&gt;Patient Phone Number&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Doctor
+&lt;ul&gt;
+&lt;li&gt;Doctor Name&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Drug
+&lt;ul&gt;
+&lt;li&gt;Drug Name&lt;/li&gt;
+&lt;li&gt;Drug Ammount&lt;/li&gt;
+&lt;li&gt;Drug Days&lt;/li&gt;
+&lt;li&gt;Drug Refill&lt;/li&gt;
+&lt;li&gt;Drug Pricing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Patient Pay&lt;/li&gt;
+&lt;li&gt;Pharmacist&#39;s Signature&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Many PDF frameworks or libraries can support annotation that you can predefine an corrodinate then put your annotation on that position, but that way is not fit this use case, because there&#39;s many information needed to be displayed on the pdf file, furthermore, these info aren&#39;t static content.&lt;/p&gt;
+&lt;p&gt;So we should define a template and apply all the static content first, then taking the advanced of the &lt;strong&gt;screenshot&lt;/strong&gt; feature of chromedb to screenshot the template and save it into pdf file format. Let move to the next session :))&lt;/p&gt;
+&lt;h3 id=&#34;initialize-a-simple-project&#34;&gt;Initialize a simple project.&lt;/h3&gt;
+&lt;p&gt;Here is the project structure of our demo&lt;/p&gt;
+&lt;p&gt;├── main.go&lt;br&gt;
+├── pdf-template.html&lt;br&gt;
+└── prescription-template.go&lt;/p&gt;
+&lt;p&gt;Let start with the &lt;code&gt;prescription-template.go&lt;/code&gt; first. As introduced before, the prescription template includes so many information, now we construct prescription template model based on those information.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-golang&#34; data-lang=&#34;golang&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;s&#34;&gt;&amp;#34;time&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// Hospital Hospital in the prescription
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Hospital&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Name&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Address&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;address&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Phone&lt;/span&gt;   &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;phone&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// Prescription Prescription in the prescription
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Prescription&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Date&lt;/span&gt;     &lt;span class=&#34;nx&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Time&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;date&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;OrderNom&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;    &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;orderNom&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// Patient Patient in the prescription
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Patient&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Name&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Address&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;address&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;City&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;city&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Phone&lt;/span&gt;   &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;phone&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// Doctor Doctor in the prescription
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Doctor&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Name&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// Drug Drug in the prescription
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Drug&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Name&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;  &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Ammount&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;     &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;amount&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Days&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;     &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;days&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;38&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Refill&lt;/span&gt;  &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;     &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;refill&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;39&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Price&lt;/span&gt;   &lt;span class=&#34;kt&#34;&gt;float32&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;Price&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;40&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;41&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;42&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;// PrescriptionTemplate PrescriptionTemplate is used in pdf-template
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;43&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;PrescriptionTemplate&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;44&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Hospital&lt;/span&gt;           &lt;span class=&#34;nx&#34;&gt;Hospital&lt;/span&gt;     &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;hospital&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;45&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Prescription&lt;/span&gt;       &lt;span class=&#34;nx&#34;&gt;Prescription&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;prescription&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;46&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Patient&lt;/span&gt;            &lt;span class=&#34;nx&#34;&gt;Patient&lt;/span&gt;      &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;patient&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;47&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Doctor&lt;/span&gt;             &lt;span class=&#34;nx&#34;&gt;Doctor&lt;/span&gt;       &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;doctor&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;48&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Drug&lt;/span&gt;               &lt;span class=&#34;nx&#34;&gt;Drug&lt;/span&gt;         &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;drug&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;49&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;Pay&lt;/span&gt;                &lt;span class=&#34;kt&#34;&gt;float32&lt;/span&gt;      &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;pay&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;50&lt;/span&gt;	&lt;span class=&#34;nx&#34;&gt;PharmacistSignature&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;       &lt;span class=&#34;s&#34;&gt;`json:&amp;#34;pharmacisSignature&amp;#34;`&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;51&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The next step, we prepare a html template that contain mapped values with your defined model using the built-in package &lt;a href=&#34;https://golang.org/pkg/text/template/&#34;&gt;text/template&lt;/a&gt; of Go.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;main&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h1&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;hospital_name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Hospital.Name }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;hospital_address&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Hospital.Address }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;hospital_phone&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Hospital.Phone }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;kind&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;OFFICAL PRESCRIPTION RECEIPT&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;prescription_date&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Prescription.Date }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Rx: {{ .Prescription.OrderNom }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;patient_name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Patient.Name }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;patient_address&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Patient.Address }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;patient_city&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Patient.City }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;patient_phone&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Patient.Phone }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;doctor_name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Dr: {{ .Doctor.Name }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;drug_name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;{{ .Drug.Name }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;drug_info&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;drug_days&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Days: {{ .Drug.days }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;drug_ref&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Ref: {{ .Drug.Refill }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;drug_pricing&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Pricing GS/CA&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;price&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;${{ .Drug.Price }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;patient_pay&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Patient pays: &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;box&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;${{ .Pay }}&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;pharmacist_signature&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Pharmacist&amp;#39;s Signature&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;h3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;line&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;      &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{ .PharmacisSignature }}&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;alt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;signature&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;pdfScreenshot&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;res&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Tasks&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;	&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Tasks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;		&lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Navigate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;url&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;		&lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;WaitVisible&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;sel&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ByID&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;		&lt;span class=&#34;nx&#34;&gt;chromedp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ActionFunc&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ctx&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Context&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;error&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;			&lt;span class=&#34;nx&#34;&gt;buf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;page&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;PrintToPDF&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;WithPrintBackground&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Do&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ctx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;			&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;				&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;err&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;			&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;			&lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;res&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;buf&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;			&lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;nil&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;		&lt;span class=&#34;p&#34;&gt;}),&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;	&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+Now we move to the most important part.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.imgur.com/T95aW5X.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;to-be-decided&#34;&gt;To be decided&lt;/h3&gt;
+&lt;p&gt;The completed project here &lt;a href=&#34;https://github.com/minhnhatspk/chromedp-screenshot-pdf&#34;&gt;https://github.com/minhnhatspk/chromedp-screenshot-pdf&lt;/a&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Markdown Syntax Guide</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/</guid>
+      <description>
+        
+          &lt;p&gt;This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.&lt;/p&gt;
+&lt;h2 id=&#34;headings&#34;&gt;Headings&lt;/h2&gt;
+&lt;p&gt;The following HTML &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;—&lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; elements represent six levels of section headings. &lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt; is the highest section level while &lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt; is the lowest.&lt;/p&gt;
+&lt;h1 id=&#34;h1&#34;&gt;H1&lt;/h1&gt;
+&lt;h2 id=&#34;h2&#34;&gt;H2&lt;/h2&gt;
+&lt;h3 id=&#34;h3&#34;&gt;H3&lt;/h3&gt;
+&lt;h4 id=&#34;h4&#34;&gt;H4&lt;/h4&gt;
+&lt;h5 id=&#34;h5&#34;&gt;H5&lt;/h5&gt;
+&lt;h6 id=&#34;h6&#34;&gt;H6&lt;/h6&gt;
+&lt;h2 id=&#34;paragraph&#34;&gt;Paragraph&lt;/h2&gt;
+&lt;p&gt;Xerum, quo qui aut unt expliquam qui dolut labo. Aque venitatiusda cum, voluptionse latur sitiae dolessi aut parist aut dollo enim qui voluptate ma dolestendit peritin re plis aut quas inctum laceat est volestemque commosa as cus endigna tectur, offic to cor sequas etum rerum idem sintibus eiur? Quianimin porecus evelectur, cum que nis nust voloribus ratem aut omnimi, sitatur? Quiatem. Nam, omnis sum am facea corem alique molestrunt et eos evelece arcillit ut aut eos eos nus, sin conecerem erum fuga. Ri oditatquam, ad quibus unda veliamenimin cusam et facea ipsamus es exerum sitate dolores editium rerore eost, temped molorro ratiae volorro te reribus dolorer sperchicium faceata tiustia prat.&lt;/p&gt;
+&lt;p&gt;Itatur? Quiatae cullecum rem ent aut odis in re eossequodi nonsequ idebis ne sapicia is sinveli squiatum, core et que aut hariosam ex eat.&lt;/p&gt;
+&lt;h2 id=&#34;blockquotes&#34;&gt;Blockquotes&lt;/h2&gt;
+&lt;p&gt;The blockquote element represents content that is quoted from another source, optionally with a citation which must be within a &lt;code&gt;footer&lt;/code&gt; or &lt;code&gt;cite&lt;/code&gt; element, and optionally with in-line changes such as annotations and abbreviations.&lt;/p&gt;
+&lt;h4 id=&#34;blockquote-without-attribution&#34;&gt;Blockquote without attribution&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Tiam, ad mint andaepu dandae nostion secatur sequo quae.
+&lt;strong&gt;Note&lt;/strong&gt; that you can use &lt;em&gt;Markdown syntax&lt;/em&gt; within a blockquote.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;blockquote-with-attribution&#34;&gt;Blockquote with attribution&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Don&#39;t communicate by sharing memory, share memory by communicating.&lt;br&gt;
+— &lt;cite&gt;Rob Pike&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/cite&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;tables&#34;&gt;Tables&lt;/h2&gt;
+&lt;p&gt;Tables aren&#39;t part of the core Markdown spec, but Hugo supports supports them out-of-the-box.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Age&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Bob&lt;/td&gt;
+&lt;td&gt;27&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Alice&lt;/td&gt;
+&lt;td&gt;23&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;inline-markdown-within-tables&#34;&gt;Inline Markdown within tables&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Italics&lt;/th&gt;
+&lt;th&gt;Bold&lt;/th&gt;
+&lt;th&gt;Code&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;em&gt;italics&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;bold&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;code&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;code-blocks&#34;&gt;Code Blocks&lt;/h2&gt;
+&lt;h4 id=&#34;code-block-with-backticks&#34;&gt;Code block with backticks&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Example HTML5 Document&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Test&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;c&#34;&gt;&amp;lt;!-- this line is extraneous 2Error from server (Forbidden): deployments.apps is forbidden: User &amp;#34;chiptest&amp;#34; cannot create resource &amp;#34;deployments&amp;#34; in API group &amp;#34;apps&amp;#34; in the namespace &amp;#34;default&amp;#34; --&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;code-block-indented-with-four-spaces&#34;&gt;Code block indented with four spaces&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;!doctype html&amp;gt;
+&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
+&amp;lt;head&amp;gt;
+  &amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
+  &amp;lt;title&amp;gt;Example HTML5 Document&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+  &amp;lt;p&amp;gt;Test&amp;lt;/p&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;code-block-with-hugos-internal-highlight-shortcode&#34;&gt;Code block with Hugo&#39;s internal highlight shortcode&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;lang&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;en&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;charset&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;utf-8&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Example HTML5 Document&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;title&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;head&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;Test&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;p&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;list-types&#34;&gt;List Types&lt;/h2&gt;
+&lt;h4 id=&#34;ordered-list&#34;&gt;Ordered List&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;First item&lt;/li&gt;
+&lt;li&gt;Second item&lt;/li&gt;
+&lt;li&gt;Third item&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;unordered-list&#34;&gt;Unordered List&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;List item&lt;/li&gt;
+&lt;li&gt;Another item&lt;/li&gt;
+&lt;li&gt;And another item&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;nested-list&#34;&gt;Nested list&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Fruit
+&lt;ul&gt;
+&lt;li&gt;Apple&lt;/li&gt;
+&lt;li&gt;Orange&lt;/li&gt;
+&lt;li&gt;Banana&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Dairy
+&lt;ul&gt;
+&lt;li&gt;Milk&lt;/li&gt;
+&lt;li&gt;Cheese&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;other-elements--abbr-sub-sup-kbd-mark&#34;&gt;Other Elements — abbr, sub, sup, kbd, mark&lt;/h2&gt;
+&lt;p&gt;&lt;abbr title=&#34;Graphics Interchange Format&#34;&gt;GIF&lt;/abbr&gt; is a bitmap image format.&lt;/p&gt;
+&lt;p&gt;H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
+&lt;p&gt;X&lt;sup&gt;n&lt;/sup&gt; + Y&lt;sup&gt;n&lt;/sup&gt; = Z&lt;sup&gt;n&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Press &lt;kbd&gt;&lt;kbd&gt;CTRL&lt;/kbd&gt;+&lt;kbd&gt;ALT&lt;/kbd&gt;+&lt;kbd&gt;Delete&lt;/kbd&gt;&lt;/kbd&gt; to end the session.&lt;/p&gt;
+&lt;p&gt;Most &lt;mark&gt;salamanders&lt;/mark&gt; are nocturnal, and hunt for insects, worms, and other small creatures.&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;The above quote is excerpted from Rob Pike&#39;s &lt;a href=&#34;https://www.youtube.com/watch?v=PAAkCSZUG1c&#34;&gt;talk&lt;/a&gt; during Gopherfest, November 18, 2015. &lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Rich Content</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/rich-content/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/rich-content/</guid>
+      <description>
+        
+          &lt;p&gt;Hugo ships with several &lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#use-hugo-s-built-in-shortcodes&#34;&gt;Built-in Shortcodes&lt;/a&gt; for rich content, along with a &lt;a href=&#34;https://gohugo.io/about/hugo-and-gdpr/&#34;&gt;Privacy Config&lt;/a&gt; and a set of Simple Shortcodes that enable static and no-JS versions of various social media embeds.&lt;/p&gt;
+&lt;hr&gt;
+
+
+
+  
+    
+    
+    
+      
+    
+    
+      
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  &lt;div class=&#34;fancybox&#34;&gt;
+    &lt;a data-fancybox=&#34;Gallery Name&#34; href=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34; data-caption=&#34;Advanced options&#34;&gt;&lt;img src=&#34;https://vincentpham13.github.io/vincentpham13/logos/logo.png&#34;&gt;&lt;/a&gt;
+    &lt;div class=&#34;caption&#34;&gt;Advanced options&lt;/div&gt;
+  &lt;/div&gt;
+
+
+&lt;h2 id=&#34;instagram-simple-shortcode&#34;&gt;Instagram Simple Shortcode&lt;/h2&gt;
+&lt;br&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;youtube-privacy-enhanced-shortcode&#34;&gt;YouTube Privacy Enhanced Shortcode&lt;/h2&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/ZJthWmvUzzc&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;br&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;twitter-simple-shortcode&#34;&gt;Twitter Simple Shortcode&lt;/h2&gt;
+
+
+
+
+&lt;style type=&#34;text/css&#34;&gt;
+  .twitter-tweet {
+  font: 14px/1.45 -apple-system,BlinkMacSystemFont,&#34;Segoe UI&#34;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&#34;Helvetica Neue&#34;,sans-serif;
+  border-left: 4px solid #2b7bb9;
+  padding-left: 1.5em;
+  color: #555;
+}
+  .twitter-tweet a {
+  color: #2b7bb9;
+  text-decoration: none;
+}
+  blockquote.twitter-tweet a:hover,
+  blockquote.twitter-tweet a:focus {
+  text-decoration: underline;
+}
+&lt;/style&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;“In addition to being more logical, asymmetry has the advantage that its complete appearance is far more optically effective than symmetry.”&lt;br&gt;— Jan Tschichold &lt;a href=&#34;https://t.co/gcv7SrhvJb&#34;&gt;pic.twitter.com/gcv7SrhvJb&lt;/a&gt;&lt;/p&gt;&amp;mdash; Graphic Design History (@DesignReviewed) &lt;a href=&#34;https://twitter.com/DesignReviewed/status/1085870671291310081?ref_src=twsrc%5Etfw&#34;&gt;January 17, 2019&lt;/a&gt;&lt;/blockquote&gt;
+
+&lt;br&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;vimeo-simple-shortcode&#34;&gt;Vimeo Simple Shortcode&lt;/h2&gt;
+
+
+
+
+
+
+&lt;style&gt;
+.__h_video {
+   position: relative;
+   padding-bottom: 56.23%;
+   height: 0;
+   overflow: hidden;
+   width: 100%;
+   background: #000;
+}
+.__h_video img {
+   width: 100%;
+   height: auto;
+   color: #000;
+}
+.__h_video .play {
+   height: 72px;
+   width: 72px;
+   left: 50%;
+   top: 50%;
+   margin-left: -36px;
+   margin-top: -36px;
+   position: absolute;
+   cursor: pointer;
+}
+&lt;/style&gt;
+
+
+&lt;div class=&#34;s_video_simple __h_video&#34;&gt;
+&lt;a href=&#34;https://vimeo.com/4.8912912e&amp;#43;07&#34; rel=&#34;noopener&#34; target=&#34;_blank&#34;&gt;
+
+
+&lt;img src=&#34;https://i.vimeocdn.com/video/337401969_640.jpg&#34; srcset=&#34;https://i.vimeocdn.com/video/337401969_640.jpg 1x, https://i.vimeocdn.com/video/337401969.jpg 2x&#34; alt=&#34;Sing Jan Swing - Kinetic Type&#34;&gt;
+&lt;div class=&#34;play&#34;&gt;&lt;svg version=&#34;1&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; viewBox=&#34;0 0 61 61&#34;&gt;&lt;circle cx=&#34;30.5&#34; cy=&#34;30.5&#34; r=&#34;30.5&#34; opacity=&#34;.8&#34; fill=&#34;#000&#34;&gt;&lt;/circle&gt;&lt;path d=&#34;M25.3 19.2c-2.1-1.2-3.8-.2-3.8 2.2v18.1c0 2.4 1.7 3.4 3.8 2.2l16.6-9.1c2.1-1.2 2.1-3.2 0-4.4l-16.6-9z&#34; fill=&#34;#fff&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/div&gt;&lt;/a&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Placeholder Text</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/placeholder-text/</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/placeholder-text/</guid>
+      <description>
+        
+          &lt;p&gt;Lorem est tota propiore conpellat pectoribus de pectora summo.&lt;/p&gt;
+&lt;p&gt;Redit teque digerit hominumque toris verebor lumina non cervice subde tollit usus habet Arctonque, furores quas nec ferunt. Quoque montibus nunc caluere tempus inhospita parcite confusaque translucet patri vestro qui optatis lumine cognoscere flos nubis! Fronde ipsamque patulos Dryopen deorum.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Exierant elisi ambit vivere dedere&lt;/li&gt;
+&lt;li&gt;Duce pollice&lt;/li&gt;
+&lt;li&gt;Eris modo&lt;/li&gt;
+&lt;li&gt;Spargitque ferrea quos palude&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Rursus nulli murmur; hastile inridet ut ab gravi sententia! Nomine potitus silentia flumen, sustinet placuit petis in dilapsa erat sunt. Atria tractus malis.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Comas hunc haec pietate fetum procerum dixit&lt;/li&gt;
+&lt;li&gt;Post torum vates letum Tiresia&lt;/li&gt;
+&lt;li&gt;Flumen querellas&lt;/li&gt;
+&lt;li&gt;Arcanaque montibus omnes&lt;/li&gt;
+&lt;li&gt;Quidem et&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;vagus-elidunt&#34;&gt;Vagus elidunt&lt;/h1&gt;
+&lt;p&gt;&lt;svg class=&#34;canon&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34; overflow=&#34;visible&#34; viewBox=&#34;0 0 496 373&#34; height=&#34;373&#34; width=&#34;496&#34;&gt;&lt;g fill=&#34;none&#34;&gt;&lt;path stroke=&#34;#000&#34; stroke-width=&#34;.75&#34; d=&#34;M.599 372.348L495.263 1.206M.312.633l494.95 370.853M.312 372.633L247.643.92M248.502.92l246.76 370.566M330.828 123.869V1.134M330.396 1.134L165.104 124.515&#34;&gt;&lt;/path&gt;&lt;path stroke=&#34;#ED1C24&#34; stroke-width=&#34;.75&#34; d=&#34;M275.73 41.616h166.224v249.05H275.73zM54.478 41.616h166.225v249.052H54.478z&#34;&gt;&lt;/path&gt;&lt;path stroke=&#34;#000&#34; stroke-width=&#34;.75&#34; d=&#34;M.479.375h495v372h-495zM247.979.875v372&#34;&gt;&lt;/path&gt;&lt;ellipse cx=&#34;498.729&#34; cy=&#34;177.625&#34; rx=&#34;.75&#34; ry=&#34;1.25&#34;&gt;&lt;/ellipse&gt;&lt;ellipse cx=&#34;247.229&#34; cy=&#34;377.375&#34; rx=&#34;.75&#34; ry=&#34;1.25&#34;&gt;&lt;/ellipse&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Canons_of_page_construction#Van_de_Graaf_canon&#34;&gt;The Van de Graaf Canon&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mane-refeci-capiebant-unda-mulcebat&#34;&gt;Mane refeci capiebant unda mulcebat&lt;/h2&gt;
+&lt;p&gt;Victa caducifer, malo vulnere contra dicere aurato, ludit regale, voca! Retorsit colit est profanae esse virescere furit nec; iaculi matertera et visa est, viribus. Divesque creatis, tecta novat collumque vulnus est, parvas. &lt;strong&gt;Faces illo pepulere&lt;/strong&gt; tempus adest. Tendit flamma, ab opes virum sustinet, sidus sequendo urbis.&lt;/p&gt;
+&lt;p&gt;Iubar proles corpore raptos vero auctor imperium; sed et huic: manus caeli Lelegas tu lux. Verbis obstitit intus oblectamina fixis linguisque ausus sperare Echionides cornuaque tenent clausit possit. Omnia putatur. Praeteritae refert ausus; ferebant e primus lora nutat, vici quae mea ipse. Et iter nil spectatae vulnus haerentia iuste et exercebat, sui et.&lt;/p&gt;
+&lt;p&gt;Eurytus Hector, materna ipsumque ut Politen, nec, nate, ignari, vernum cohaesit sequitur. Vel &lt;strong&gt;mitis temploque&lt;/strong&gt; vocatus, inque alis, &lt;em&gt;oculos nomen&lt;/em&gt; non silvis corpore coniunx ne displicet illa. Crescunt non unus, vidit visa quantum inmiti flumina mortis facto sic: undique a alios vincula sunt iactata abdita! Suspenderat ego fuit tendit: luna, ante urbem Propoetides &lt;strong&gt;parte&lt;/strong&gt;.&lt;/p&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Math Typesetting</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/math-typesetting/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/math-typesetting/</guid>
+      <description>
+        
+          &lt;p&gt;Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.&lt;/p&gt;
+&lt;p&gt;In this example we will be using &lt;a href=&#34;https://katex.org/&#34;&gt;KaTeX&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a partial under &lt;code&gt;/layouts/partials/math.html&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Within this partial reference the &lt;a href=&#34;https://katex.org/docs/autorender.html&#34;&gt;Auto-render Extension&lt;/a&gt; or host these scripts locally.&lt;/li&gt;
+&lt;li&gt;Include the partial in your templates like so:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; or .Params.math .Site.Params.math &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; partial &lt;span class=&#34;s2&#34;&gt;&amp;#34;math.html&amp;#34;&lt;/span&gt; . &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;{{&lt;/span&gt; end &lt;span class=&#34;o&#34;&gt;}}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;To enable KaTex globally set the parameter &lt;code&gt;math&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in a project&#39;s configuration&lt;/li&gt;
+&lt;li&gt;To enable KaTex on a per page basis include the parameter &lt;code&gt;math: true&lt;/code&gt; in content files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Use the online reference of &lt;a href=&#34;https://katex.org/docs/supported.html&#34;&gt;Supported TeX Functions&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;examples&#34;&gt;Examples&lt;/h3&gt;
+
+&lt;p&gt;Block math:
+$$
+\varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } }
+$$&lt;/p&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Emoji Support</title>
+      <link>https://vincentpham13.github.io/vincentpham13/post/emoji-support/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://vincentpham13.github.io/vincentpham13/post/emoji-support/</guid>
+      <description>
+        
+          &lt;p&gt;Emoji can be enabled in a Hugo project in a number of ways.&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://gohugo.io/functions/emojify/&#34;&gt;&lt;code&gt;emojify&lt;/code&gt;&lt;/a&gt; function can be called directly in templates or &lt;a href=&#34;https://gohugo.io/templates/shortcode-templates/#inline-shortcodes&#34;&gt;Inline Shortcodes&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To enable emoji globally, set &lt;code&gt;enableEmoji&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; in your site&#39;s &lt;a href=&#34;https://gohugo.io/getting-started/configuration/&#34;&gt;configuration&lt;/a&gt; and then you can type emoji shorthand codes directly in content files; e.g.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙈&lt;/span&gt; &lt;code&gt;:see_no_evil:&lt;/code&gt;&lt;/span&gt;  &lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙉&lt;/span&gt; &lt;code&gt;:hear_no_evil:&lt;/code&gt;&lt;/span&gt;  &lt;span class=&#34;nowrap&#34;&gt;&lt;span class=&#34;emojify&#34;&gt;🙊&lt;/span&gt; &lt;code&gt;:speak_no_evil:&lt;/code&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;br&gt;
+&lt;p&gt;The &lt;a href=&#34;http://www.emoji-cheat-sheet.com/&#34;&gt;Emoji cheat sheet&lt;/a&gt; is a useful reference for emoji shorthand codes.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;N.B.&lt;/strong&gt; The above steps enable Unicode Standard emoji characters and sequences in Hugo, however the rendering of these glyphs depends on the browser and the platform. To style the emoji you can either use a third party emoji font or a font stack; e.g.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;.emoji {
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;  font-family: Apple Color Emoji, Segoe UI Emoji, NotoColorEmoji, Segoe UI Symbol, Android Emoji, EmojiSymbols;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>
