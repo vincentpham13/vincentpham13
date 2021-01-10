@@ -1,5 +1,5 @@
 ---
-title: "How to set up Postgres server for stating environment on Kubernetes"
+title: "How to set up Postgres server for staging environment on Kubernetes"
 date: "2020-04-04T00:22:02+07:00"
 author: "Nhat Pham"
 description : ""
