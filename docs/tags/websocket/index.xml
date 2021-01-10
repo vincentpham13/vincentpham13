@@ -17,8 +17,11 @@
       <description>
         
           &lt;!-- **Insert Lead paragraph here.** --&gt;
-&lt;h1 id=&#34;about-server-sent-events&#34;&gt;About Server-Sent Events&lt;/h1&gt;
-&lt;p&gt;SSE stands for Server-Sent Events, It&#39;s a technique for sending messages to client from server-sent API, which allows the client to update the changes sent from server by leveraging the Javascript &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/EventSource&#34;&gt;&lt;code&gt;EventSource&lt;/code&gt;&lt;/a&gt; interface.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;This article helps you to understand the very basic of SSE and offers a sample of basic use case that can be used in your application.&lt;/em&gt;&lt;/p&gt;
+&lt;h1 id=&#34;about-sse&#34;&gt;About SSE&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;SSE stands for Server-Sent Events, It&#39;s a technique based on HTTP for sending messages to client from server-sent API, which allows which allows the server to push updates to the client by leveraging the Javascript &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/EventSource&#34;&gt;&lt;code&gt;EventSource&lt;/code&gt;&lt;/a&gt; interface.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;&lt;img src=&#34;https://i.imgur.com/VtYu9j0.png&#34; alt=&#34;Client Server In SSE technique :inline&#34;&gt;&lt;/p&gt;
 &lt;p&gt;EventSource interface allows us to open a persistent, one-direction connection to the server over HTTP protocol by specifying a &lt;code&gt;text/event-stream&lt;/code&gt; header and listen for incomming messages.&lt;br&gt;
 There serveral use cases that making choice to useSSE is well-suited such as when you don&#39;t need to send to the server any data. for example, a Twitter-style news feed or a real-time dashboard of stock quotes, notifications to browser.&lt;/p&gt;

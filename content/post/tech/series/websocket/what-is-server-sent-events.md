@@ -22,8 +22,9 @@ tags:
 comment: false # Disable comment if false.
 ---
 <!-- **Insert Lead paragraph here.** -->
-# About Server-Sent Events
-SSE stands for Server-Sent Events, It's a technique for sending messages to client from server-sent API, which allows the client to update the changes sent from server by leveraging the Javascript [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) interface.
+*This article helps you to understand the very basic of SSE and offers a sample of basic use case that can be used in your application.*
+# About SSE
+> SSE stands for Server-Sent Events, It's a technique based on HTTP for sending messages to client from server-sent API, which allows which allows the server to push updates to the client by leveraging the Javascript [`EventSource`](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) interface.
 
 ![Client Server In SSE technique :inline](https://i.imgur.com/VtYu9j0.png)
 

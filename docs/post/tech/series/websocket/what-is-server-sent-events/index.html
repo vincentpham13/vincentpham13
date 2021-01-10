@@ -185,8 +185,11 @@
 
     
     <!-- **Insert Lead paragraph here.** -->
-<h1 id="about-server-sent-events">About Server-Sent Events</h1>
-<p>SSE stands for Server-Sent Events, It's a technique for sending messages to client from server-sent API, which allows the client to update the changes sent from server by leveraging the Javascript <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource"><code>EventSource</code></a> interface.</p>
+<p><em>This article helps you to understand the very basic of SSE and offers a sample of basic use case that can be used in your application.</em></p>
+<h1 id="about-sse">About SSE</h1>
+<blockquote>
+<p>SSE stands for Server-Sent Events, It's a technique based on HTTP for sending messages to client from server-sent API, which allows which allows the server to push updates to the client by leveraging the Javascript <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource"><code>EventSource</code></a> interface.</p>
+</blockquote>
 <p><img src="https://i.imgur.com/VtYu9j0.png" alt="Client Server In SSE technique :inline"></p>
 <p>EventSource interface allows us to open a persistent, one-direction connection to the server over HTTP protocol by specifying a <code>text/event-stream</code> header and listen for incomming messages.<br>
 There serveral use cases that making choice to useSSE is well-suited such as when you don't need to send to the server any data. for example, a Twitter-style news feed or a real-time dashboard of stock quotes, notifications to browser.</p>
@@ -662,9 +665,9 @@ The received message is in string format, so we have to parse the message using 
 </a>
 
   </div>
-  <script src="/vincentpham13/js/jquery-3.3.1.min.js?1610250309"></script>
+  <script src="/vincentpham13/js/jquery-3.3.1.min.js?1610251191"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
-  <script src="/vincentpham13/js/mermaid.js?1610250309"></script>
+  <script src="/vincentpham13/js/mermaid.js?1610251191"></script>
 
   <script>
       mermaid.initialize({ startOnLoad: true });
