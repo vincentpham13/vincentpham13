@@ -197,4 +197,4 @@ eventSource.close(); // close connection
 Although SSE still has limitaton, but generally, it's fairly straightforward to implement and avoid "overkill" against other teniques like websocket while your application does not need to send any data to the serser.  
 
 
-Clone {{% button href="https://github.com/vincentpham13/react-node-server" icon="fab fa-github" icon-position="left" %}}The completed demo code{{% /button %}} here
+Clone {{% button href="https://github.com/vincentpham13/server-sent-events-example" icon="fab fa-github" icon-position="left" %}}The completed demo code{{% /button %}} here

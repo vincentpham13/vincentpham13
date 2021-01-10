@@ -177,7 +177,7 @@ The received message is in string format, so we have to parse the message using 
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
 &lt;p&gt;Although SSE still has limitaton, but generally, it&#39;s fairly straightforward to implement and avoid &amp;quot;overkill&amp;quot; against other teniques like websocket while your application does not need to send any data to the serser.&lt;/p&gt;
 &lt;p&gt;Clone 
-&lt;a  href=&#34;https://github.com/vincentpham13/react-node-server&#34; target=&#34;_blank&#34;  class=&#34;btn btn-default&#34;&gt;
+&lt;a  href=&#34;https://github.com/vincentpham13/server-sent-events-example&#34; target=&#34;_blank&#34;  class=&#34;btn btn-default&#34;&gt;
   
   
   
