@@ -39,11 +39,11 @@
 
     
     
-    <link rel="preload" href="https://vincentpham13.github.io/vincentpham13/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity = "sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" as="style" crossorigin="anonymous">
+    <link rel="preload" href="https://vincentpham13.github.io/vincentpham13/css/styles.14c1bb7ba00b1951714e040217abb9ae522755ba09c287a3eb8bee7413da742fda9d5348bc1ba92042e2b37e1e061891538e5c2af49a24058c49f7772e5c44df.css" integrity = "sha512-FMG7e6ALGVFxTgQCF6u5rlInVboJwoej64vudBPadC/anVNIvBupIELis34eBhiRU45cKvSaJAWMSfd3LlxE3w==" as="style" crossorigin="anonymous">
     <link rel="preload" href="https://vincentpham13.github.io/vincentpham13/js/bundle.min.e05ee1b7c56dd7a980219db77f0c95adb05acee4520b02e3e53c97fe7367c86644c3684e68cb984bd5b81bbb85a1d9946b12d1f636bc60d1460d1b900f7d93fe.js" as="script" integrity=
     "sha512-4F7ht8Vt16mAIZ23fwyVrbBazuRSCwLj5TyX/nNnyGZEw2hOaMuYS9W4G7uFodmUaxLR9ja8YNFGDRuQD32T/g==" crossorigin="anonymous">
     
-    <link rel="stylesheet" type="text/css" href="https://vincentpham13.github.io/vincentpham13/css/styles.3bcf6a8a940f2734bd9292880885ef4bd73b18ad880c780a9cd14fd0620f931c255357995eb823092d31234d5ae7f6001bb45be8ceec04641a81755300f81095.css" integrity="sha512-O89qipQPJzS9kpKICIXvS9c7GK2IDHgKnNFP0GIPkxwlU1eZXrgjCS0xI01a5/YAG7Rb6M7sBGQagXVTAPgQlQ==" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://vincentpham13.github.io/vincentpham13/css/styles.14c1bb7ba00b1951714e040217abb9ae522755ba09c287a3eb8bee7413da742fda9d5348bc1ba92042e2b37e1e061891538e5c2af49a24058c49f7772e5c44df.css" integrity="sha512-FMG7e6ALGVFxTgQCF6u5rlInVboJwoej64vudBPadC/anVNIvBupIELis34eBhiRU45cKvSaJAWMSfd3LlxE3w==" crossorigin="anonymous">
     
     
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
@@ -59,7 +59,7 @@
 <header class="nav_header" >
   <nav class="nav">
     <a href='https://vincentpham13.github.io/vincentpham13/' class="nav_brand nav_item">
-      <img src="https://vincentpham13.github.io/vincentpham13/logos/logo.png" class="logo">
+      <img src="https://vincentpham13.github.io/vincentpham13/logos/logo_color_nobg.png" class="logo">
       <div class="nav_close">
         <div>
           <svg class="icon">
@@ -188,7 +188,7 @@
 <h1 id="about-server-sent-events">About Server-Sent Events</h1>
 <p>SSE stands for Server-Sent Events, It's a technique for sending messages to client from server-sent API, which allows the client to update the changes sent from server by leveraging the Javascript <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventSource"><code>EventSource</code></a> interface.</p>
 <p><img src="https://i.imgur.com/VtYu9j0.png" alt="Client Server In SSE technique :inline"></p>
-<p>EventSource interface allows us to open a persistent, one-direction connection to the server over HTTP protocol by specifying a <code>text/event-stream</code> header and listen for incomming messages.
+<p>EventSource interface allows us to open a persistent, one-direction connection to the server over HTTP protocol by specifying a <code>text/event-stream</code> header and listen for incomming messages.<br>
 There serveral use cases that making choice to useSSE is well-suited such as when you don't need to send to the server any data. for example, a Twitter-style news feed or a real-time dashboard of stock quotes, notifications to browser.</p>
 <table>
 <thead>
@@ -223,7 +223,7 @@ There serveral use cases that making choice to useSSE is well-suited such as whe
 <li>React.js (hooks is reconmmended) for the client side</li>
 </ul>
 <h1 id="getting-started">Getting started</h1>
-<h3 id="react-web-app---frontend">React Web App - Frontend</h3>
+<h3 id="express-server---backend">Express Server - Backend</h3>
 <p>Firstly, I recommend you to use this project boilerplate to skip stuffs that out of this article. Checkout my <a href="https://github.com/vincentpham13/react-node-server.git">react-node-server</a> or you can setup your own coding environtment.</p>
 <p>The project structure looks like this</p>
 <div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>├── node_modules
@@ -234,43 +234,7 @@ There serveral use cases that making choice to useSSE is well-suited such as whe
 <span class="ln">6</span>│   ├── history.js
 <span class="ln">7</span>│   ├── server.js
 <span class="ln">8</span>└── package.json
-</code></pre></div><p>In the Home functional component, we initiate an instance of EventSource by using <code>new</code> operator and passing to it an URL. The URL is API endpoint that we will create later. This example is to display messages from server in every single 1 second, so I name the API path something likes <code>/stream-random-number</code>.</p>
-<p>You can optionaly specify should the api</p>
-<p>EventSource interface also provides us useful events to capture the stage of the request like <code>onopen</code>, <code>onmessage</code> and  <code>onerror</code>.</p>
-<p>I gonna use the <code>useState</code> hook to create a state to hold the list of returned messages and a method to update that state.</p>
-<p>Each time the <code>message</code> event is triggered, we can get the message from <code>MessageEvent</code> argument which inside the callback function.</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kr">const</span> <span class="p">[</span><span class="nx">listNumbers</span><span class="p">,</span> <span class="nx">setListNumbers</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
-<span class="ln"> 2</span>
-<span class="ln"> 3</span><span class="nx">useEffect</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln"> 4</span>    <span class="kr">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/stream-random-number`</span><span class="p">,</span> <span class="p">{</span> <span class="nx">withCredentials</span><span class="o">:</span> <span class="kc">true</span> <span class="p">});</span>
-<span class="ln"> 5</span>    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln"> 6</span>      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;The connection was established&#39;</span><span class="p">);</span>
-<span class="ln"> 7</span>    <span class="p">}</span>
-<span class="ln"> 8</span>    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">messageEvent</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln"> 9</span>      <span class="nx">setListNumbers</span><span class="p">([</span>
-<span class="ln">10</span>        <span class="p">...</span><span class="nx">listNumbers</span><span class="p">,</span>
-<span class="ln">11</span>        <span class="nx">messageEvent</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span>
-<span class="ln">12</span>      <span class="p">]);</span>
-<span class="ln">13</span>    <span class="p">}</span>
-<span class="ln">14</span>  <span class="p">},</span> <span class="p">[]);</span>
-</code></pre></div><h4 id="error-handling">Error Handling</h4>
-<p>When a problem occurs such as network timout or reloading page, we can capture this error using on <code>error</code> event.</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln">2</span>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;The connection was closed&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-<span class="ln">3</span><span class="p">}</span>
-</code></pre></div><h3 id="closing-event-stream">Closing Event Stream</h3>
-<p>We can explicily terminate the connection by using the <code>close</code> method of EventSource.</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span> <span class="c1">// close connection
-</span></code></pre></div><p><strong>Note:</strong> You can optionally use <code>addEventListener</code> to handle these above events, there's no difference between these two types.</p>
-<p>eg:</p>
-<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">messageEvent</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln">2</span>      <span class="c1">// do some stuffs
-</span><span class="ln">3</span><span class="c1"></span><span class="p">});</span>
-</code></pre></div><p>At this stage, if you take a quick look at the browser console, you will might we the following results
-<img src="https://i.imgur.com/kfuevus.png" alt=""></p>
-<p>The first red error log indicates that our server does not configure header for this request efficently, therefore, the <code>The connection was closed</code> message was displayed obviously.</p>
-<h3 id="express-server---backend">Express Server - Backend</h3>
-<p>The server-side script that send events that need to response with MIME type <code>text/event-stream</code>.<br>
+</code></pre></div><p>The server-side script that send events that need to response with MIME type <code>text/event-stream</code>.<br>
 Messages in the event stream are separated by a pair of newline characters. A colon as the first character of a line is in essence a comment, and is ignored.
 eg:</p>
 <ul>
@@ -284,10 +248,10 @@ for example:<br>
 <strong>data: this is message A<code>\n</code>data: this is also belong to message A<code>\n\n</code></strong></li>
 <li><code>event</code>: the type of event, if this field is specified, you must use <code>addEventListener()</code> to listen to this given type of event, otherwise, <code>onmessage</code> will handle it.<br>
 for example:<br>
-<strong>event: custom<code>\n</code>data: this is message A\ndata: this also belong to message A<code>\n\n</code></strong><br>
-Next step, we need to initiate a server that handle the <code>/stream-random-numbers</code> API, I decided to choose Express.js since it's quite simple to setup.
-Open the <code>serser.js</code> file inside the boilerplate and create a new route.</li>
+<strong>event: custom<code>\n</code>data: this is message A\ndata: this also belong to message A<code>\n\n</code></strong></li>
 </ul>
+<p>Next step, we need to initiate a server that handle the <code>/stream-random-numbers</code> API, I decided to choose Express.js since it's quite simple to setup.
+Open the <code>serser.js</code> file inside the boilerplate and create a new route.</p>
 <div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/stream-random-number&#39;</span><span class="p">,</span> <span class="nx">cors</span><span class="p">(</span><span class="nx">corsOptions</span><span class="p">),</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
 <span class="ln"> 2</span>  <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;text/event-stream&#39;</span><span class="p">);</span>
 <span class="ln"> 3</span>  <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Connection&#39;</span><span class="p">,</span> <span class="s1">&#39;keep-alive&#39;</span><span class="p">);</span>
@@ -296,7 +260,7 @@ Open the <code>serser.js</code> file inside the boilerplate and create a new rou
 <span class="ln"> 6</span>
 <span class="ln"> 7</span>  <span class="nx">res</span><span class="p">.</span><span class="nx">flushHeaders</span><span class="p">();</span>
 <span class="ln"> 8</span>  <span class="kr">const</span> <span class="nx">interval</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-<span class="ln"> 9</span>    <span class="kr">const</span> <span class="nx">randomNumber</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">);</span>
+<span class="ln"> 9</span>    <span class="kr">const</span> <span class="nx">randomNumber</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
 <span class="ln">10</span>    <span class="kr">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="p">{</span>
 <span class="ln">11</span>      <span class="nx">id</span><span class="o">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">getTime</span><span class="p">(),</span>
 <span class="ln">12</span>      <span class="nx">number</span><span class="o">:</span> <span class="nx">randomNumber</span><span class="p">,</span>
@@ -308,25 +272,88 @@ Open the <code>serser.js</code> file inside the boilerplate and create a new rou
 <span class="ln">18</span>
 <span class="ln">19</span>  <span class="nx">res</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
 <span class="ln">20</span>    <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">interval</span><span class="p">);</span>
-<span class="ln">21</span>
-<span class="ln">22</span>    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
-<span class="ln">23</span>  <span class="p">});</span>
-<span class="ln">24</span><span class="p">});</span>
+<span class="ln">21</span>    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">();</span>
+<span class="ln">22</span>  <span class="p">});</span>
+<span class="ln">23</span><span class="p">});</span>
 </code></pre></div><p>This example, we leverage <code>setInterval</code> function to send a message every 1 second. And an unforgetable thing is termitating the created interval when <code>close</code> event is triggered for some reasons.  Note that you must clear the interval before returning the http response.</p>
-<h1 id="conclusion">Conclusion</h1>
-<p>Download 
+<h3 id="react-web-app---frontend">React Web App - Frontend</h3>
+<p>In the Home functional component, we initiate an instance of EventSource by using <code>new</code> operator and passing to it an URL. The URL is API endpoint that we will create later. This example is to display messages from server in every single 1 second, so I name the API path something likes <code>/stream-random-number</code>.</p>
+<p>EventSource interface also provides us useful events to capture the stage of the request like <code>onopen</code>, <code>onmessage</code> and  <code>onerror</code>.</p>
+<p>I gonna use the <code>useState</code> hook to create a state to hold the list of returned messages and a method to update that state.</p>
+<p>Each time the <code>message</code> event is triggered, we can get the message from <code>MessageEvent</code> argument which inside the callback function.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kr">const</span> <span class="nx">useEventSource</span> <span class="o">=</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="ln"> 2</span>  <span class="kr">const</span> <span class="p">[</span><span class="nx">message</span><span class="p">,</span> <span class="nx">setMessage</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">();</span>
+<span class="ln"> 3</span>  <span class="nx">useEffect</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="ln"> 4</span>    <span class="kr">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span>
+<span class="ln"> 5</span>      <span class="sb">`</span><span class="si">${</span><span class="nx">baseUrl</span><span class="si">}</span><span class="sb">/stream-random-number`</span><span class="p">,</span>
+<span class="ln"> 6</span>      <span class="p">{</span>
+<span class="ln"> 7</span>        <span class="nx">withCredentials</span><span class="o">:</span> <span class="kc">true</span> 
+<span class="ln"> 8</span>      <span class="p">},</span>
+<span class="ln"> 9</span>    <span class="p">);</span>
+<span class="ln">10</span>    <span class="nx">eventSource</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;random_number&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">messageEvent</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="ln">11</span>      <span class="kr">const</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">messageEvent</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<span class="ln">12</span>      <span class="nx">setMessage</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+<span class="ln">13</span>    <span class="p">});</span>
+<span class="ln">14</span>  <span class="p">},</span> <span class="p">[]);</span>
+<span class="ln">15</span>
+<span class="ln">16</span>  <span class="k">return</span> <span class="nx">message</span><span class="p">;</span>
+<span class="ln">17</span><span class="p">}</span>
+</code></pre></div><p>In the above code, if we use the <code>onmessage</code> handler, we will not receive any message because we set the event type to <code>random_number</code>.<br>
+The received message is in string format, so we have to parse the message using <strong>JSON.parse</strong> utility.</p>
+
+<div class="notices info" ><p>Since useEffect does not actively &quot;Watch&quot; the changes, we should create a custom hook keep track of the new message.</p>
+</div>
+
+<p>In the Home component, we just call this custom hook like this</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln"> 1</span><span class="kr">const</span> <span class="p">[</span><span class="nx">messages</span><span class="p">,</span> <span class="nx">setMessages</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">([]);</span>
+<span class="ln"> 2</span>  <span class="kr">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">useEventSource</span><span class="p">();</span>
+<span class="ln"> 3</span>
+<span class="ln"> 4</span>  <span class="nx">useEffect</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="ln"> 5</span>    <span class="k">if</span> <span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+<span class="ln"> 6</span>      <span class="nx">setMessages</span><span class="p">([</span>
+<span class="ln"> 7</span>        <span class="nx">message</span><span class="p">,</span>
+<span class="ln"> 8</span>        <span class="p">...</span><span class="nx">messages</span>
+<span class="ln"> 9</span>      <span class="p">])</span>
+<span class="ln">10</span>    <span class="p">}</span>
+<span class="ln">11</span>  <span class="p">},</span> <span class="p">[</span><span class="nx">message</span><span class="p">]);</span>
+</code></pre></div><p>In order to easily see the new messages, we have to put them to the top of the messages history.</p>
+<div class="highlight"><pre class="chroma"><code class="language-jsx" data-lang="jsx"><span class="ln"> 1</span><span class="k">return</span> <span class="p">(</span>
+<span class="ln"> 2</span>    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">display</span><span class="o">:</span> <span class="s1">&#39;flex&#39;</span><span class="p">,</span> <span class="nx">justifyContent</span><span class="o">:</span> <span class="s1">&#39;center&#39;</span> <span class="p">}}&gt;</span>
+<span class="ln"> 3</span>      <span class="p">&lt;</span><span class="nt">ul</span> <span class="na">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">listStyleType</span><span class="o">:</span> <span class="s1">&#39;none&#39;</span> <span class="p">}}&gt;</span>
+<span class="ln"> 4</span>        <span class="p">{</span><span class="nx">messages</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">msg</span><span class="p">,</span> <span class="nx">idx</span><span class="p">)</span> <span class="p">=&gt;</span>
+<span class="ln"> 5</span>          <span class="p">&lt;</span><span class="nt">li</span>
+<span class="ln"> 6</span>            <span class="na">style</span><span class="o">=</span><span class="p">{{</span> <span class="nx">height</span><span class="o">:</span> <span class="s1">&#39;30px&#39;</span><span class="p">}}</span>
+<span class="ln"> 7</span>            <span class="na">key</span><span class="o">=</span><span class="p">{</span><span class="nx">msg</span><span class="p">.</span><span class="nx">id</span><span class="p">}&gt;</span>
+<span class="ln"> 8</span>            <span class="nx">Time</span><span class="o">:</span> <span class="p">{</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">id</span><span class="p">).</span><span class="nx">toLocaleTimeString</span><span class="p">()},</span> <span class="nx">got</span> <span class="nx">the</span> <span class="nx">number</span><span class="o">:</span> <span class="p">{</span><span class="nx">msg</span><span class="p">.</span><span class="nx">number</span><span class="p">}</span>
+<span class="ln"> 9</span>          <span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;)}</span>
+<span class="ln">10</span>      <span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+<span class="ln">11</span>    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+<span class="ln">12</span>  <span class="p">);</span>
+</code></pre></div><p>After finishing the above steps, we got the result like this
+<img src="https://i.imgur.com/at4ko2A.png" alt="Messages List :inline"></p>
+<h4 id="error-handling">Error Handling</h4>
+<p>When a problem occurs such as network timout or reloading page, we can capture this error using on <code>error</code> event.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="ln">2</span>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;The connection was closed&#39;</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="ln">3</span><span class="p">}</span>
+</code></pre></div><h4 id="closing-event-stream">Closing Event Stream</h4>
+<p>We can explicily terminate the connection by using the <code>close</code> method of EventSource.</p>
+<div class="highlight"><pre class="chroma"><code class="language-javascript" data-lang="javascript"><span class="ln">1</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span> <span class="c1">// close connection
+</span></code></pre></div><h1 id="conclusion">Conclusion</h1>
+<p>Although SSE still has limitaton, but generally, it's fairly straightforward to implement and avoid &quot;overkill&quot; against other teniques like websocket while your application does not need to send any data to the serser.</p>
+<p>Clone 
 <a  href="https://github.com/vincentpham13/react-node-server" target="_blank"  class="btn btn-default">
   
   
   
     
-  <i class="fas fa-download"></i>
+  <i class="fab fa-github"></i>
     
   
-  The completed source code here
+  The completed demo code
   
 </a>
-</p>
+ here</p>
 
     
   </article>
@@ -635,9 +662,9 @@ Open the <code>serser.js</code> file inside the boilerplate and create a new rou
 </a>
 
   </div>
-  <script src="/vincentpham13/js/jquery-3.3.1.min.js?1610208347"></script>
+  <script src="/vincentpham13/js/jquery-3.3.1.min.js?1610250206"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
-  <script src="/vincentpham13/js/mermaid.js?1610208347"></script>
+  <script src="/vincentpham13/js/mermaid.js?1610250206"></script>
 
   <script>
       mermaid.initialize({ startOnLoad: true });
