@@ -1,6 +1,6 @@
 ---
-title: "{{ replace .Name "-" " " | title }}" # Title of the blog post.
-date: {{ .Date }} # Date of post creation.
+title: "Decorator Design Pattern in Typescript" # Title of the blog post.
+date: 2021-01-11T00:11:47+07:00 # Date of post creation.
 description: "Article description." # Description used for search engine.
 featured: true # Sets if post is a featured post, making appear on the home page side bar.
 draft: true # Sets whether to render this page. Draft of true will not be rendered.
@@ -21,7 +21,14 @@ tags:
 ---
 <!-- **Insert Lead paragraph here.** -->
 *This article helps you to understand SOMETHING and offers SOMETHING.*
-
+- A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators use the form @expression, where expression must evaluate to a function that will be called at runtime with information about the decorated declaration.
+  - Class
+  - Method
+  - Accessor
+  - Property
+  - Parameter
+- Decorator Factory
+- Decorator Composition
 # About
 
 # Prerequisites

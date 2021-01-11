@@ -3,315 +3,315 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/</loc>
+    <loc>/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/"
+                href="/pt/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/"
+                href="/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/categories/</loc>
+    <loc>/categories/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/categories/"
+                href="/pt/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/categories/"
+                href="/categories/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/event-source/</loc>
+    <loc>/tags/event-source/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/</loc>
+    <loc>/post/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/post/"
+                href="/pt/post/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/post/"
+                href="/post/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/series/</loc>
+    <loc>/series/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/series/"
+                href="/pt/series/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/series/"
+                href="/series/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/sse/</loc>
+    <loc>/tags/sse/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/tags/"
+                href="/pt/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/tags/"
+                href="/tags/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/categories/technology/</loc>
+    <loc>/categories/technology/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/websocket/</loc>
+    <loc>/tags/websocket/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/series/websocket/</loc>
+    <loc>/series/websocket/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/tech/series/websocket/what-is-server-sent-events/</loc>
+    <loc>/post/tech/series/websocket/what-is-server-sent-events/</loc>
     <lastmod>2021-01-08T16:30:07+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/tech/host-your-own-postgres-server-in-kubernetes/</loc>
+    <loc>/post/tech/host-your-own-postgres-server-in-kubernetes/</loc>
     <lastmod>2020-04-04T00:22:02+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/k8s/</loc>
+    <loc>/tags/k8s/</loc>
     <lastmod>2020-04-04T00:22:02+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/kubernetes/</loc>
+    <loc>/tags/kubernetes/</loc>
     <lastmod>2020-04-04T00:22:02+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/postgres/</loc>
+    <loc>/tags/postgres/</loc>
     <lastmod>2020-04-04T00:22:02+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/tech/what-is-service-worker-in-javascript/</loc>
+    <loc>/post/tech/what-is-service-worker-in-javascript/</loc>
     <lastmod>2019-08-03T11:16:55+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/tech/implement-push-notification-delivery-using-onesignal/</loc>
+    <loc>/post/tech/implement-push-notification-delivery-using-onesignal/</loc>
     <lastmod>2019-07-22T22:56:36+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/pdf/</loc>
+    <loc>/tags/pdf/</loc>
     <lastmod>2019-07-20T00:24:45+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</loc>
+    <loc>/post/tech/working-with-pdf-on-server-side-using-golang-and-chromedp/</loc>
     <lastmod>2019-07-20T00:24:45+07:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/archives/</loc>
+    <loc>/archives/</loc>
     <lastmod>2019-05-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/css/</loc>
+    <loc>/tags/css/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/tags/css/"
+                href="/pt/tags/css/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/tags/css/"
+                href="/tags/css/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/featured/</loc>
+    <loc>/tags/featured/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/html/</loc>
+    <loc>/tags/html/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/tags/html/"
+                href="/pt/tags/html/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/tags/html/"
+                href="/tags/html/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/markdown/</loc>
+    <loc>/tags/markdown/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/tags/markdown/"
+                href="/pt/tags/markdown/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/tags/markdown/"
+                href="/tags/markdown/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/</loc>
+    <loc>/post/markdown-syntax/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/post/markdown-syntax/"
+                href="/pt/post/markdown-syntax/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/post/markdown-syntax/"
+                href="/post/markdown-syntax/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/categories/syntax/</loc>
+    <loc>/categories/syntax/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/themes/</loc>
+    <loc>/tags/themes/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/categories/themes/</loc>
+    <loc>/categories/themes/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/series/themes-guide/</loc>
+    <loc>/series/themes-guide/</loc>
     <lastmod>2019-03-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/privacy/</loc>
+    <loc>/tags/privacy/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/rich-content/</loc>
+    <loc>/post/rich-content/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/shortcodes/</loc>
+    <loc>/tags/shortcodes/</loc>
     <lastmod>2019-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/placeholder-text/</loc>
+    <loc>/post/placeholder-text/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/text/</loc>
+    <loc>/tags/text/</loc>
     <lastmod>2019-03-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/math-typesetting/</loc>
+    <loc>/post/math-typesetting/</loc>
     <lastmod>2019-03-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/tags/emoji/</loc>
+    <loc>/tags/emoji/</loc>
     <lastmod>2019-03-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/emoji-support/</loc>
+    <loc>/post/emoji-support/</loc>
     <lastmod>2019-03-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/about/"
+                href="/pt/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/about/"
+                href="/about/"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/index.html</loc>
+    <loc>/index.html</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="pt"
-                href="https://vincentpham13.github.io/vincentpham13/pt/index.html"
+                href="/pt/index.html"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://vincentpham13.github.io/vincentpham13/index.html"
+                href="/index.html"
                 />
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/contact/_index.br/</loc>
+    <loc>/contact/_index.br/</loc>
   </url>
   
   <url>
-    <loc>https://vincentpham13.github.io/vincentpham13/post/</loc>
+    <loc>/post/</loc>
   </url>
   
 </urlset>
