@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>websocket on Vincent Pham</title>
-    <link>http://vincentpham.dev/tags/websocket/</link>
+    <link>https://vincentpham.dev/tags/websocket/</link>
     <description>Recent content in websocket on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="http://vincentpham.dev/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="https://vincentpham.dev/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>What Is Server-Sent Events?</title>
-      <link>http://vincentpham.dev/post/tech/series/websocket/what-is-server-sent-events/</link>
+      <link>https://vincentpham.dev/post/tech/series/websocket/what-is-server-sent-events/</link>
       <pubDate>Fri, 08 Jan 2021 16:30:07 +0700</pubDate>
       
-      <guid>http://vincentpham.dev/post/tech/series/websocket/what-is-server-sent-events/</guid>
+      <guid>https://vincentpham.dev/post/tech/series/websocket/what-is-server-sent-events/</guid>
       <description>
         
           &lt;!-- **Insert Lead paragraph here.** --&gt;

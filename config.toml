@@ -1,6 +1,6 @@
 author = "Vincent Pham"
 # baseURL = "/"
-baseURL = "http://vincentpham.dev/"
+baseURL = "https://vincentpham.dev/"
 # baseURL = "https://vincentpham13.github.io/vincentpham13/"
 copyright = "Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved."
 languageCode = "en-us"
