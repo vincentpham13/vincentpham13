@@ -3,7 +3,7 @@ title: "Decorator in Typescript" # Title of the blog post.
 date: 2021-01-11T00:11:47+07:00 # Date of post creation.
 description: "Descorator in Typescript." # Description used for search engine.
 featured: true # Sets if post is a featured post, making appear on the home page side bar.
-draft: true # Sets whether to render this page. Draft of true will not be rendered.
+draft: false # Sets whether to render this page. Draft of true will not be rendered.
 toc: false # Controls if a table of contents should be generated for first-level links automatically.
 # menu: main
 featureImage: "https://codetheworld.io/wp-content/uploads/2019/09/header-6.png" # Sets featured image on blog post.
