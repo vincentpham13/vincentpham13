@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Series on Vincent Pham</title>
-    <link>http://blog.getme.cc/series/</link>
+    <link>https://vincentpham.dev/series/</link>
     <description>Recent content in Series on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Mon, 11 Jan 2021 00:11:47 +0700</lastBuildDate><atom:link href="http://blog.getme.cc/series/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Jan 2021 00:11:47 +0700</lastBuildDate><atom:link href="https://vincentpham.dev/series/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
