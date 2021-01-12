@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>typescript on Vincent Pham</title>
-    <link>https://vincentpham13.github.io/vincentpham13/tags/typescript/</link>
+    <link>http://blog.getme.cc/tags/typescript/</link>
     <description>Recent content in typescript on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Mon, 11 Jan 2021 00:11:47 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/tags/typescript/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Jan 2021 00:11:47 +0700</lastBuildDate><atom:link href="http://blog.getme.cc/tags/typescript/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Decorator in Typescript</title>
-      <link>https://vincentpham13.github.io/vincentpham13/post/tech/decorator-in-typescript/</link>
+      <link>http://blog.getme.cc/post/tech/decorator-in-typescript/</link>
       <pubDate>Mon, 11 Jan 2021 00:11:47 +0700</pubDate>
       
-      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/decorator-in-typescript/</guid>
+      <guid>http://blog.getme.cc/post/tech/decorator-in-typescript/</guid>
       <description>
         
           &lt;!-- **Insert Lead paragraph here.** --&gt;
