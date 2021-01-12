@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>k8s on Vincent Pham</title>
-    <link>https://vincentpham.dev/tags/k8s/</link>
+    <link>http://vincentpham.dev/tags/k8s/</link>
     <description>Recent content in k8s on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="https://vincentpham.dev/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 04 Apr 2020 00:22:02 +0700</lastBuildDate><atom:link href="http://vincentpham.dev/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How to set up Postgres server for staging environment on Kubernetes</title>
-      <link>https://vincentpham.dev/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
+      <link>http://vincentpham.dev/post/tech/host-your-own-postgres-server-in-kubernetes/</link>
       <pubDate>Sat, 04 Apr 2020 00:22:02 +0700</pubDate>
       
-      <guid>https://vincentpham.dev/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
+      <guid>http://vincentpham.dev/post/tech/host-your-own-postgres-server-in-kubernetes/</guid>
       <description>
         
           &lt;!-- ![](https://www.mvps.net/docs/wp-content/uploads/2019/06/kubernetes.png) --&gt;
