@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Vincent Pham</title>
-    <link>/pt/index.html</link>
+    <link>https://vincentpham13.github.io/vincentpham13/pt/index.html</link>
     <description>Recent content on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright><atom:link href="/pt/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright><atom:link href="https://vincentpham13.github.io/vincentpham13/pt/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>SSE on Vincent Pham</title>
-    <link>/tags/sse/</link>
+    <link>https://vincentpham13.github.io/vincentpham13/tags/sse/</link>
     <description>Recent content in SSE on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="/tags/sse/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/tags/sse/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>What Is Server-Sent Events?</title>
-      <link>/post/tech/series/websocket/what-is-server-sent-events/</link>
+      <link>https://vincentpham13.github.io/vincentpham13/post/tech/series/websocket/what-is-server-sent-events/</link>
       <pubDate>Fri, 08 Jan 2021 16:30:07 +0700</pubDate>
       
-      <guid>/post/tech/series/websocket/what-is-server-sent-events/</guid>
+      <guid>https://vincentpham13.github.io/vincentpham13/post/tech/series/websocket/what-is-server-sent-events/</guid>
       <description>
         
           &lt;!-- **Insert Lead paragraph here.** --&gt;
@@ -22,7 +22,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;SSE stands for Server-Sent Events, It&#39;s a technique based on HTTP for sending messages to client from server-sent API, which allows which allows the server to push updates to the client by leveraging the Javascript &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/API/EventSource&#34;&gt;&lt;code&gt;EventSource&lt;/code&gt;&lt;/a&gt; interface.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&#34;https://i.imgur.com/VtYu9j0.png&#34; alt=&#34;Client Server In SSE technique :inline&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.imgur.com/VtYu9j0.png&#34; alt=&#34;Client Server In SSE technique :: image-scalable&#34;&gt;&lt;/p&gt;
 &lt;p&gt;EventSource interface allows us to open a persistent, one-direction connection to the server over HTTP protocol by specifying a &lt;code&gt;text/event-stream&lt;/code&gt; header and listen for incomming messages.&lt;br&gt;
 There serveral use cases that making choice to useSSE is well-suited such as when you don&#39;t need to send to the server any data. for example, a Twitter-style news feed or a real-time dashboard of stock quotes, notifications to browser.&lt;/p&gt;
 &lt;table&gt;

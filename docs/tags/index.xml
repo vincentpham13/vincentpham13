@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Vincent Pham</title>
-    <link>/tags/</link>
+    <link>https://vincentpham13.github.io/vincentpham13/tags/</link>
     <description>Recent content in Tags on Vincent Pham</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright © 2008–2021, Steve Francia and the Hugo Authors; all rights reserved.</copyright>
-    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Jan 2021 16:30:07 +0700</lastBuildDate><atom:link href="https://vincentpham13.github.io/vincentpham13/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
